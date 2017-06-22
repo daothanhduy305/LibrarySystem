@@ -9,7 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.mongodb:mongo-java-driver:3.4.2" level="project" />
     <orderEntry type="library" name="ai.api:libai:1.4.8" level="project" />
-    <orderEntry type="module" module-name="GenericConfigurations" />
     <orderEntry type="module" module-name="Data" />
+    <orderEntry type="module" module-name="GenericConfigurations" />
   </component>
 </module>

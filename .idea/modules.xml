@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/Data/Data.iml" filepath="$PROJECT_DIR$/Data/Data.iml" />
       <module fileurl="file://$PROJECT_DIR$/EboloCommons/EboloCommons.iml" filepath="$PROJECT_DIR$/EboloCommons/EboloCommons.iml" />
       <module fileurl="file://$PROJECT_DIR$/GenericConfigurations/GenericConfigurations.iml" filepath="$PROJECT_DIR$/GenericConfigurations/GenericConfigurations.iml" />
+      <module fileurl="file://M:\Projects\Java\LibrarySystem\GenericConfigurations\GenericConfigurations.iml" filepath="M:\Projects\Java\LibrarySystem\GenericConfigurations\GenericConfigurations.iml" />
       <module fileurl="file://$PROJECT_DIR$/LibMa.iml" filepath="$PROJECT_DIR$/LibMa.iml" />
       <module fileurl="file://$PROJECT_DIR$/ManagementApp/ManagementApp.iml" filepath="$PROJECT_DIR$/ManagementApp/ManagementApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/UserAuthenticate/UserAuthenticate.iml" filepath="$PROJECT_DIR$/UserAuthenticate/UserAuthenticate.iml" />
