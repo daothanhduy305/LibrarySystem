@@ -1,0 +1,65 @@
+package ebolo.libma.stub.commander.commands.librarian;
+
+import ebolo.libma.commons.net.Message;
+import ebolo.libma.commons.net.SocketWrapper;
+import ebolo.libma.data.data.raw.user.Student;
+import ebolo.libma.stub.commander.commands.Command;
+import ebolo.libma.stub.db.DbPortal;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+/**
+ * Command for librarian add new student
+ *
+ * @author Ebolo
+ * @version 13/06/2017
+ * @see Command
+ * @since 13/06/2017
+ */
+
+public class AddStudentCommand extends Command {
+    private Student student;
+    
+    AddStudentCommand(SocketWrapper client, Object[] args) {
+        super(client, args);
+    }
+    
+    @Override
+    protected void notifyCommandResult() {
+    
+    }
+    
+    @Override
+    protected boolean checkCorrectness() {
+        try {
+            if (args.length == 1) {
+                student = (Student) args[0];
+                return true;
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    @Override
+    protected boolean legalAction() throws Exception {
+        // convert student into Bson document
+        Document studentDocument = student.toMongoDocument();
+        Document query = new Document("auth.username", student.getUsername());
+        // check if username is used
+        if (DbPortal.getInstance().getUserDb().find(query).first() == null) {
+            studentDocument.put("last_modified", System.currentTimeMillis());
+            DbPortal.getInstance().getUserDb().insertOne(studentDocument);
+            ObjectId studentObjectId = studentDocument.getObjectId("_id");
+            // if everything is ok then send back success message to client
+            if (studentObjectId != null) {
+                client.sendMessage(Message.messageGenerate("success", studentObjectId.toString()));
+                return true;
+            } else
+                failedReason = "Something went wrong. Cannot insert new student into database!";
+        } else
+            failedReason = "A user with username " + '\"' + student.getUsername() + '\"' + " exists in database!";
+        return false;
+    }
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="10.0" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.112"
+          fx:controller="ebolo.libma.client.ui.controllers.BookInfoController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="15.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="15.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="15.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints fillHeight="false" valignment="CENTER" vgrow="ALWAYS"/>
+    </rowConstraints>
+    <children>
+        <Label text="Title:"/>
+        <Label text="Author(s):" GridPane.rowIndex="1"/>
+        <Label text="Categories:" GridPane.rowIndex="2"/>
+        <TextField fx:id="titleTextField" editable="false" promptText="Title" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+        <TextField fx:id="authorsTextField" editable="false" promptText="Separate by &quot;_&quot;" GridPane.columnIndex="1" GridPane.columnSpan="3"
+                   GridPane.rowIndex="1"/>
+        <TextField fx:id="categoriesTextField" editable="false" promptText="Separate by &quot;_&quot;" GridPane.columnIndex="1"
+                   GridPane.columnSpan="3" GridPane.rowIndex="2"/>
+        <Label text="Publisher:" GridPane.columnIndex="4"/>
+        <TextField fx:id="publisherTextField" editable="false" promptText="Publisher" GridPane.columnIndex="5"/>
+        <Label text="Date:" GridPane.rowIndex="3"/>
+        <TextField fx:id="dateTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <Label text="Language:" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+        <TextField fx:id="languageTextField" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="3"/>
+        <Label text="Pages:" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+        <TextField fx:id="pagesTextField" editable="false" promptText="Pages" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+        <Label text="Period:" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+        <TextField fx:id="periodTextField" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="2"/>
+        <Label text="Available:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+        <Label fx:id="availabilityLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+        <TextArea fx:id="descriptionTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Description..." wrapText="true"
+                  GridPane.columnSpan="6" GridPane.rowIndex="4"/>
+        <Button fx:id="reserveButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                mnemonicParsing="false" onAction="#reserve" text="Reserve" GridPane.columnIndex="6"/>
+        <Button fx:id="cancelButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="6" GridPane.rowIndex="1"/>
+    </children>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+</GridPane>

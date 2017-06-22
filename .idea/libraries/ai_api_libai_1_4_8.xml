@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="ai.api:libai:1.4.8" type="repository">
+    <properties maven-id="ai.api:libai:1.4.8" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/ai/api/libai/1.4.8/libai-1.4.8.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-api/2.2/log4j-api-2.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-core/2.2/log4j-core-2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

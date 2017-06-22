@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112"
+          fx:controller="ebolo.libma.management.ui.controllers.TransactionsViewController">
+    <columnConstraints>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+    <children>
+        <TableView fx:id="transactionTableView" focusTraversable="false" pickOnBounds="false" tableMenuButtonVisible="true" GridPane.hgrow="ALWAYS"
+                   GridPane.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="studentColumn" prefWidth="75.0" text="Student"/>
+                <TableColumn fx:id="bookColumn" prefWidth="75.0" text="Book"/>
+                <TableColumn fx:id="tStartColumn" prefWidth="75.0" text="Start time"/>
+                <TableColumn fx:id="tExpiredColumn" prefWidth="75.0" text="Expired time"/>
+                <TableColumn fx:id="returnedColumn" prefWidth="75.0" text="Returned"/>
+                <TableColumn fx:id="expiredColumn" prefWidth="75.0" text="Expired"/>
+            </columns>
+        </TableView>
+        <VBox fx:id="sideBar" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.vgrow="ALWAYS">
+            <children>
+                <TextField fx:id="searchBox" promptText="Search...">
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                </TextField>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="25.0" top="10.0"/>
+            </padding>
+        </VBox>
+    </children>
+</GridPane>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="10.0" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.112"
+          fx:controller="ebolo.libma.management.ui.controllers.EditBookController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="15.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="15.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="15.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints fillHeight="false" valignment="CENTER" vgrow="ALWAYS"/>
+    </rowConstraints>
+    <children>
+        <Label text="Title:"/>
+        <Label text="Author(s):" GridPane.rowIndex="1"/>
+        <Label text="Categories:" GridPane.rowIndex="2"/>
+        <TextField fx:id="titleTextField" promptText="Title" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+        <TextField fx:id="authorsTextField" promptText="Separate by &quot;_&quot;" GridPane.columnIndex="1" GridPane.columnSpan="3"
+                   GridPane.rowIndex="1"/>
+        <TextField fx:id="categoriesTextField" promptText="Separate by &quot;_&quot;" GridPane.columnIndex="1" GridPane.columnSpan="3"
+                   GridPane.rowIndex="2"/>
+        <Label text="ISBN-10:" GridPane.columnIndex="4"/>
+        <Label text="ISBN-13:" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+        <Label text="Publisher:" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+        <TextField fx:id="isbn10TextField" promptText="ISBN-10" GridPane.columnIndex="5"/>
+        <TextField fx:id="isbn13TextField" promptText="ISBN-13" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+        <TextField fx:id="publisherTextField" promptText="Publisher" GridPane.columnIndex="5" GridPane.rowIndex="2"/>
+        <Label text="Date:" GridPane.rowIndex="3"/>
+        <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <Label text="Language:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+        <ComboBox fx:id="langComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+        <Label text="Pages:" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+        <TextField fx:id="pagesTextField" promptText="Pages" GridPane.columnIndex="5" GridPane.rowIndex="3"/>
+        <Label text="Period:" GridPane.rowIndex="4"/>
+        <HBox fx:id="lendingBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1"
+              GridPane.rowIndex="4">
+            <children>
+                <TextField fx:id="periodTextField" promptText="Lending period"/>
+                <ComboBox fx:id="periodUnitComboBox" prefWidth="150.0"/>
+            </children>
+        </HBox>
+        <Label text="Available:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+        <CheckBox fx:id="availableCheckBox" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+        <Label text="Total:" GridPane.columnIndex="4" GridPane.rowIndex="4"/>
+        <TextField fx:id="totalUnitTextField" promptText="Total unit" GridPane.columnIndex="5" GridPane.rowIndex="4"/>
+        <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" promptText="Description..." GridPane.columnSpan="6"
+                  GridPane.rowIndex="5"/>
+        <Button fx:id="saveButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                mnemonicParsing="false" onAction="#save" text="Save" GridPane.columnIndex="6"/>
+        <Button fx:id="cancelButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="6" GridPane.rowIndex="1"/>
+    </children>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+</GridPane>

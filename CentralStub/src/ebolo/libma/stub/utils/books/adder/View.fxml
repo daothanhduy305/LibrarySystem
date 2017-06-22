@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="5.0" prefWidth="300.0" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.112"
+          fx:controller="ebolo.libma.stub.utils.books.adder.AdderController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+    </rowConstraints>
+    <children>
+        <Button mnemonicParsing="false" onAction="#add" text="Browse..."/>
+        <Label fx:id="statusLabel" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
+    </children>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+</GridPane>

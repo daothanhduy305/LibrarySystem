@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+          xmlns="http://javafx.com/javafx/8.0.112" fx:controller="ebolo.libma.management.ui.controllers.StudentsViewController">
+    <columnConstraints>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+    <children>
+        <TableView fx:id="studentsTableView" focusTraversable="false" pickOnBounds="false" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="studentIdColumn" prefWidth="75.0" text="Student ID"/>
+                <TableColumn fx:id="usernameColumn" prefWidth="75.0" text="Username"/>
+                <TableColumn fx:id="firstNameColumn" prefWidth="75.0" text="First name"/>
+                <TableColumn fx:id="middleNameColumn" prefWidth="75.0" text="Middle name"/>
+                <TableColumn fx:id="lastNameColumn" prefWidth="75.0" text="Last name"/>
+                <TableColumn fx:id="intakeColumn" prefWidth="75.0" text="Intake"/>
+                <TableColumn fx:id="courseColumn" prefWidth="75.0" text="Major"/>
+                <TableColumn fx:id="borrowingColumn" prefWidth="75.0" text="Borrowing"/>
+            </columns>
+        </TableView>
+        <VBox fx:id="sideBar" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.vgrow="ALWAYS">
+            <children>
+                <TextField fx:id="searchBox" promptText="Search...">
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                </TextField>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="25.0" top="10.0"/>
+            </padding>
+        </VBox>
+    </children>
+</GridPane>

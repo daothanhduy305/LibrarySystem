@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.TitledPane?>
+<Accordion xmlns:fx="http://javafx.com/fxml/1" fx:id="accordion" xmlns="http://javafx.com/javafx/8.0.112"
+           fx:controller="ebolo.libma.management.ui.controllers.AddBookController">
+    <panes>
+        <TitledPane fx:id="isbnPane" text="ISBN">
+            <content>
+                <fx:include source="AddBookIsbnFXML.fxml"/>
+            </content>
+        </TitledPane>
+        <TitledPane fx:id="fullInfoPane" text="Full Information">
+            <content>
+                <fx:include source="AddBookFullFXML.fxml"/>
+            </content>
+        </TitledPane>
+    </panes>
+</Accordion>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="10.0" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.112"
+          fx:controller="ebolo.libma.management.ui.controllers.AddBookIsbnController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints fillHeight="false" maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER"/>
+        <RowConstraints fillHeight="false" maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER"/>
+    </rowConstraints>
+    <children>
+        <Label text="ISBN:" GridPane.valignment="CENTER" GridPane.vgrow="NEVER"/>
+        <TextField fx:id="isbnTextField" promptText="ISBN-10/13" GridPane.columnIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS"/>
+        <Label text="Total unit:" GridPane.columnIndex="2" GridPane.hgrow="NEVER"/>
+        <TextField fx:id="unitTextField" promptText="Total unit" GridPane.columnIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS"/>
+        <Label text="Period:" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1"
+              GridPane.valignment="CENTER">
+            <children>
+                <TextField fx:id="periodTextField" promptText="Lending period" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="periodUnitComboBox" prefWidth="150.0"/>
+            </children>
+        </HBox>
+        <Label text="Available:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="availCheckBox" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+        <Button fx:id="addButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                mnemonicParsing="false" onAction="#addNewBook" text="Add" GridPane.columnIndex="4"/>
+        <Button fx:id="cancelButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                onAction="#cancel" text="Cancel" GridPane.columnIndex="4" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+    </children>
+</GridPane>
