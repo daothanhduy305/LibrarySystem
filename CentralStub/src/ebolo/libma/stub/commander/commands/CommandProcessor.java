@@ -19,7 +19,7 @@ public class CommandProcessor {
     private CommandProcessor() {
         commandQueue = new ArrayBlockingQueue<>(1000);
         reception = new Thread(() -> {
-            while (Thread.interrupted()) {
+            while (!Thread.interrupted()) {
                 try {
                     // get command from queue
                     final Command command = commandQueue.take();
