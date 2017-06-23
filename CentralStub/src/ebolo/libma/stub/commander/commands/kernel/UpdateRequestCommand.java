@@ -79,7 +79,7 @@ public class UpdateRequestCommand extends Command {
                 updates = updates.parallelStream()
                     .filter(document -> document.getObjectId("_id").toString().equals(client.getClientId()))
                     .collect(Collectors.toList());
-            updates = updates.parallelStream().map(TransactionUtils::toTransactionWrapper).collect(Collectors.toList());
+            updates = updates.parallelStream().map(TransactionUtils::toTransactionWrapperDocument).collect(Collectors.toList());
         }
         if (updates != null && updates.size() > 0) {
             client.sendMessage(UpdateFactory.createUpdate(updates, type));
