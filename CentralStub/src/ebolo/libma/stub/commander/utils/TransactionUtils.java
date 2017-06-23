@@ -1,6 +1,5 @@
 package ebolo.libma.stub.commander.utils;
 
-import ebolo.libma.data.data.raw.transaction.TransactionWrapper;
 import ebolo.libma.stub.db.DbPortal;
 import org.bson.Document;
 import org.bson.types.ObjectId;
