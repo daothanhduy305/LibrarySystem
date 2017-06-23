@@ -56,4 +56,36 @@ public class TransactionUIWrapper extends ObjectUIWrapper<TransactionWrapper> {
     public StringProperty bookProperty() {
         return book;
     }
+    
+    public long getStartTime() {
+        return startTime.get();
+    }
+    
+    public LongProperty startTimeProperty() {
+        return startTime;
+    }
+    
+    public long getExpireTime() {
+        return expireTime.get();
+    }
+    
+    public LongProperty expireTimeProperty() {
+        return expireTime;
+    }
+    
+    public boolean isReturned() {
+        return returned.get();
+    }
+    
+    public BooleanProperty returnedProperty() {
+        return returned;
+    }
+    
+    public boolean isExpired() {
+        return expired.get();
+    }
+    
+    public BooleanProperty expiredProperty() {
+        return expired;
+    }
 }

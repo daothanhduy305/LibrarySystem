@@ -60,7 +60,7 @@ public class TransactionWrapper extends AbstractMongolizable {
         this.student = document.getString("student");
         this.book = document.getString("book");
         this.startTime = document.getLong("start_time");
-        this.expireTime = document.getLong("expire_time");
+        this.expireTime = document.getLong("expired_time");
         this.expired = document.getBoolean("expired");
         this.returned = document.getBoolean("returned");
         this.objectId = document.getObjectId("_id").toString();
@@ -95,7 +95,7 @@ public class TransactionWrapper extends AbstractMongolizable {
         Document returnDoc = new Document("student", this.student);
         returnDoc.put("book", this.book);
         returnDoc.put("start_time", this.startTime);
-        returnDoc.put("expire_time", this.expireTime);
+        returnDoc.put("expired_time", this.expireTime);
         returnDoc.put("returned", this.returned);
         returnDoc.put("expired", this.expired);
         returnDoc.put("_id", new ObjectId(this.objectId));
