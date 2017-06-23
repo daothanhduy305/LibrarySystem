@@ -262,10 +262,8 @@ public class BooksViewController implements Controller {
                     e.printStackTrace();
                 }
             });
-            
-            delete.setOnAction(event1 -> {
-                deleteBooks();
-            });
+    
+            delete.setOnAction(event1 -> deleteBooks());
             
             modify.setOnAction(event1 -> {
                 try {
