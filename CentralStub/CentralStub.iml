@@ -11,5 +11,15 @@
     <orderEntry type="module" module-name="Data" />
     <orderEntry type="module" module-name="EboloCommons" />
     <orderEntry type="library" name="org.mongodb:mongo-java-driver:3.4.2" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://C:/elasticsearch-5.4.2/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://C:/elasticsearch-5.4.2/lib" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>

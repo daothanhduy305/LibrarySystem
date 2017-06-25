@@ -40,12 +40,12 @@ import javafx.stage.Stage;
 public class ManagementAppMain extends Application {
     
     public static void main(String[] args) {
+        StubCommunication.getInstance().startStubCommunication();
         launch(args);
     }
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        StubCommunication.getInstance().startStubCommunication();
         // preparing controllers
         AppMainController appMainController = AppMainController.getInstance();
         BooksViewController booksViewController = BooksViewController.getInstance();
