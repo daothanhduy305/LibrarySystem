@@ -174,7 +174,8 @@ public class Book extends AbstractMongolizable {
     }
     
     public String getTitle() {
-        return infoDocument.getString("title");
+        return infoDocument.getString("title") +
+            (infoDocument.getString("subtitle") == null ? "" : " - " + infoDocument.getString("subtitle"));
     }
     
     public String getAuthors() {
