@@ -54,6 +54,9 @@ public class Book extends AbstractMongolizable {
         this.period = document.getLong("period");
         this.infoDocument = (Document) document.get("info_doc");
         this.isAvailable = document.getBoolean("available");
+    
+        if (document.getObjectId("_id") != null)
+            this.objectId = document.getObjectId("_id").toString();
     }
     
     public Book(String isbn, int unitTotal, long period, boolean isAvailable) throws WrongISBN, IOException, BookNotFound {
@@ -210,7 +213,7 @@ public class Book extends AbstractMongolizable {
         return description == null ? "" : description;
     }
     
-    public String getIsbn(int type) throws WrongISBN {
+    public String getIsbn(int type) {
         if (type == 10 || type == 13) {
             StringBuilder isbn10 = new StringBuilder(""), isbn13 = new StringBuilder("");
             ((List<Document>) infoDocument.get("industryIdentifiers")).forEach(document -> {
@@ -221,7 +224,7 @@ public class Book extends AbstractMongolizable {
             });
             return type == 10 ? isbn10.toString() : isbn13.toString();
         }
-        throw new WrongISBN();
+        return "";
     }
     
     public int getPages() {

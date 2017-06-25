@@ -2,7 +2,6 @@ package ebolo.libma.data.data.ui.book;
 
 import ebolo.libma.data.data.raw.book.Book;
 import ebolo.libma.data.data.ui.ObjectUIWrapper;
-import ebolo.libma.data.data.utils.exceptions.WrongISBN;
 import javafx.beans.property.*;
 
 /**
@@ -26,13 +25,8 @@ public class BookUIWrapper extends ObjectUIWrapper<Book> {
         super(book, objectId);
         
         title = new SimpleStringProperty(book.getTitle());
-        try {
-            isbn10 = new SimpleStringProperty(book.getIsbn(10));
-            isbn13 = new SimpleStringProperty(book.getIsbn(13));
-        } catch (WrongISBN wrongISBN) {
-            isbn10 = new SimpleStringProperty("");
-            isbn13 = new SimpleStringProperty("");
-        }
+        isbn10 = new SimpleStringProperty(book.getIsbn(10));
+        isbn13 = new SimpleStringProperty(book.getIsbn(13));
         author = new SimpleStringProperty(book.getAuthors());
         publisher = new SimpleStringProperty(book.getPublisher());
         publishedDate = new SimpleStringProperty(book.getPublishedDate());
@@ -140,13 +134,8 @@ public class BookUIWrapper extends ObjectUIWrapper<Book> {
     @Override
     public void update(Book book) {
         title.set(book.getTitle());
-        try {
-            isbn10.set(book.getIsbn(10));
-            isbn13.set(book.getIsbn(13));
-        } catch (WrongISBN wrongISBN) {
-            isbn10.set("");
-            isbn13.set("");
-        }
+        isbn10.set(book.getIsbn(10));
+        isbn13.set(book.getIsbn(13));
         author.set(book.getAuthors());
         publisher.set(book.getPublisher());
         publishedDate.set(book.getPublishedDate());
