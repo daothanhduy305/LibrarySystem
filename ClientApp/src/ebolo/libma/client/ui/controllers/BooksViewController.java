@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -48,7 +49,7 @@ public class BooksViewController implements Controller {
     private TableColumn<BookUIWrapper, Boolean> availabilityColumn;
     
     @FXML
-    private TextArea botInterface;
+    private TextFlow botInterface;
     @FXML
     private TextField chatTextField;
     
@@ -73,7 +74,7 @@ public class BooksViewController implements Controller {
         setUpTableUI();
         
         // Set up Alias interface
-        BotInterface.getInstance().setBotTextArea(botInterface);
+        BotInterface.getInstance().setBotInterface(botInterface);
     }
     
     @Override
@@ -188,8 +189,9 @@ public class BooksViewController implements Controller {
     @FXML
     private void chat() {
         // TODO: replace with username
-        BotInterface.getInstance().addText("Student", chatTextField.getText());
-        Alias.getInstance().saySomething(chatTextField.getText());
+        String speech = chatTextField.getText();
+        BotInterface.getInstance().addText("Student", speech);
         chatTextField.clear();
+        Alias.getInstance().saySomething(speech);
     }
 }

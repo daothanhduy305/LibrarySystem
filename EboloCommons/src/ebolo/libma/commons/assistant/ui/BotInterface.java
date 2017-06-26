@@ -1,7 +1,12 @@
 package ebolo.libma.commons.assistant.ui;
 
 import javafx.application.Platform;
-import javafx.scene.control.TextArea;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  * Class acts as the bridge between bot interface and internal classes
@@ -13,9 +18,17 @@ import javafx.scene.control.TextArea;
 
 public class BotInterface {
     private static BotInterface ourInstance;
-    private TextArea botTextArea;
+    private StringProperty aliasStatus;
+    private ObservableList<Node> botInterface;
     
     private BotInterface() {
+        aliasStatus = new SimpleStringProperty("");
+        aliasStatus.addListener(
+            (observable, oldValue, newValue) -> {
+                botInterface.remove(botInterface.size() - 1);
+                botInterface.add(new Text(newValue));
+            }
+        );
     }
     
     public static BotInterface getInstance() {
@@ -24,11 +37,22 @@ public class BotInterface {
         return ourInstance;
     }
     
-    public void setBotTextArea(TextArea botTextArea) {
-        this.botTextArea = botTextArea;
+    public void setBotInterface(TextFlow botInterface) {
+        this.botInterface = botInterface.getChildren();
+        this.botInterface.add(new Text(""));
     }
     
     public void addText(String user, String message) {
-        Platform.runLater(() -> botTextArea.appendText(user + ": " + message + '\n'));
+        Platform.runLater(() -> {
+            Text userName = new Text(user + ": ");
+            userName.setStyle("-fx-font-weight: bold");
+            Text content = new Text(message + "\n");
+            botInterface.add(botInterface.size() - 1, userName);
+            botInterface.add(botInterface.size() - 1, content);
+        });
+    }
+    
+    public void setAliasStatus(String status) {
+        Platform.runLater(() -> aliasStatus.set(status.isEmpty() ? "" : "Alias is " + status));
     }
 }

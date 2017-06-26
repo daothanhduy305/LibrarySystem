@@ -1,9 +1,5 @@
 package ebolo.libma.commons.assistant.proc;
 
-import ai.api.AIConfiguration;
-import ai.api.AIDataService;
-import ai.api.model.AIRequest;
-import ai.api.model.AIResponse;
 import ebolo.libma.commons.assistant.ui.BotInterface;
 import ebolo.libma.commons.commands.CommandUtils;
 import ebolo.libma.commons.net.StubCommunication;
@@ -13,10 +9,13 @@ import ebolo.libma.generic.keys.KeyConfigs;
 import javafx.application.Platform;
 import org.bson.Document;
 
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -29,11 +28,8 @@ import java.util.stream.Collectors;
 
 public class Alias {
     private static Alias ourInstance;
-    private AIDataService dataService;
     
     private Alias() {
-        AIConfiguration configuration = new AIConfiguration(KeyConfigs.getApiAiKey());
-        dataService = new AIDataService(configuration);
     }
     
     public static Alias getInstance() {
@@ -42,31 +38,51 @@ public class Alias {
         return ourInstance;
     }
     
+    @SuppressWarnings("unchecked")
     synchronized public void saySomething(String speech) {
         if (!speech.isEmpty()) {
-            try {
-                AIRequest request = new AIRequest(speech);
-                
-                AIResponse response = dataService.request(request);
-                
-                if (response.getStatus().getCode() == 200) { // Success code
-                    switch (response.getResult().getAction()) {
-                        case "libma.search.book":
-                            new Thread(() -> processBookAskingRequest(response)).start();
-                            break;
-                        default:
-                            BotInterface.getInstance().addText(
-                                "Alias",
-                                response.getResult().getFulfillment().getSpeech()
-                            );
-                            break;
+            new Thread(() -> {
+                try {
+                    BotInterface.getInstance().setAliasStatus("typing...");
+                    
+                    HttpURLConnection witConnection = (HttpURLConnection) new URL(
+                        "https://api.wit.ai/message?v=20170307&q=" + URLEncoder.encode(speech, "UTF-8")
+                    ).openConnection();
+                    witConnection.setRequestMethod("GET");
+                    witConnection.setRequestProperty("Accept", "application/json");
+                    witConnection.setRequestProperty("Authorization", "Bearer " + KeyConfigs.getWitClientKey());
+                    
+                    if (witConnection.getResponseCode() == 200) {
+                        BufferedReader br = new BufferedReader(new InputStreamReader((witConnection.getInputStream())));
+                        Document response = (Document) Document.parse(br.readLine()).get("entities");
+                        String intent = ((List<Document>) response.get("intent")).get(0).getString("value");
+                        switch (intent) {
+                            case "searchbook":
+                                new Thread(() -> searchBook(
+                                    ((List<Document>) response.get("keyword"))
+                                        .stream()
+                                        .map(document -> document.getString("value"))
+                                        .collect(Collectors.joining(" "))
+                                )).start();
+                                break;
+                            default:
+                                BotInterface.getInstance().setAliasStatus("");
+                                BotInterface.getInstance().addText(
+                                    "Alias",
+                                    "Sorry but I'm not capable to do this at the moment!"
+                                );
+                                break;
+                        }
                     }
-                } else {
-                    System.err.println(response.getStatus().getErrorDetails());
+                    witConnection.disconnect();
+                } catch (IOException e) {
+                    BotInterface.getInstance().setAliasStatus("");
+                    BotInterface.getInstance().addText(
+                        "Alias",
+                        "Sorry but it seems like the service is unavailable right now!"
+                    );
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            }).start();
         } else {
             BotInterface.getInstance().addText(
                 "Alias",
@@ -76,45 +92,7 @@ public class Alias {
     }
     
     @SuppressWarnings("unchecked")
-    private void processBookAskingRequest(AIResponse response) {
-        StringBuilder redundant = new StringBuilder("");
-        String keyword;
-        if (response.getResult().getParameters().get("book_entities") != null)
-            keyword = response
-                .getResult()
-                .getParameters()
-                .get("book_entities")
-                .toString()
-                .replace("\"", "");
-        else {
-            response.getResult().getParameters().forEach((s, jsonElement) -> {
-                Logger.getLogger("myApp")
-                    .log(Level.INFO, "action = search, parameter = " + s + ", value = " + jsonElement.toString());
-                if (s.equals("First") && jsonElement.getAsString().equals("I m")) {
-                    redundant.append("I'm");
-                } else {
-                    redundant.append(jsonElement.toString()
-                        .replace("{", "")
-                        .replace("}", "")
-                        .replaceAll("\"\\w*\":", "")
-                        .replace("[", "")
-                        .replace("]", "")
-                        .replace(",", " ")
-                        .replace("\"", "")
-                    ).append(' ');
-                }
-            });
-            List<String> redundantWords = Arrays.asList(redundant.toString().split(" "));
-            keyword = Arrays.stream(response.getResult().getResolvedQuery()
-                /*.replace("Do you ", "")*/
-                .replace("?", "")
-                .split(" "))
-                .filter(s -> !redundantWords.contains(s))
-                /*.filter(s -> !s.equals("I"))
-                .filter(s -> !s.equals("a"))*/
-                .collect(Collectors.joining(" "));
-        }
-        Logger.getLogger("myApp").log(Level.INFO, "action = search, keyword = " + keyword);
+    private void searchBook(String keyword) {
         CommandUtils.sendCommand(
             MetaInfo.USER_MODE.Alias,
             StubCommunication.getInstance().getStub(),
@@ -126,20 +104,19 @@ public class Alias {
             Document returnMessage = StubCommunication.getInstance().getStub().getMessageBuffer().take();
             if (returnMessage.getString("message").equals("found")) {
                 List<String> bookObjIds = (List<String>) returnMessage.get("package");
-                Platform.runLater(() -> {
-                    BotInterface.getInstance().addText(
-                        "Alias",
-                        "Here you go."
-                    );
-                    BookListManager.getInstance().getUiWrapperFilteredList().setPredicate(
-                        bookUIWrapper -> bookObjIds.contains(bookUIWrapper.getObjectId())
-                    );
-                });
+                BotInterface.getInstance().setAliasStatus("");
+                BotInterface.getInstance().addText(
+                    "Alias",
+                    "Here you go."
+                );
+                Platform.runLater(() -> BookListManager.getInstance().getUiWrapperFilteredList().setPredicate(
+                    bookUIWrapper -> bookObjIds.contains(bookUIWrapper.getObjectId())
+                ));
             } else
-                Platform.runLater(() -> BotInterface.getInstance().addText(
+                BotInterface.getInstance().addText(
                     "Alias",
                     "Sorry but I found nothing."
-                ));
+                );
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
