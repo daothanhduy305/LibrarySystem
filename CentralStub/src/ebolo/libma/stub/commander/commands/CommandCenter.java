@@ -3,6 +3,7 @@ package ebolo.libma.stub.commander.commands;
 import com.sun.istack.internal.Nullable;
 import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.user.utils.MetaInfo;
+import ebolo.libma.stub.commander.commands.alias.AliasCommandFactory;
 import ebolo.libma.stub.commander.commands.kernel.KernelCommandFactory;
 import ebolo.libma.stub.commander.commands.librarian.LibrarianCommandFactory;
 import ebolo.libma.stub.commander.commands.student.StudentCommandFactory;
@@ -31,6 +32,7 @@ public class CommandCenter {
         commandFactories.put(MetaInfo.USER_MODE.Student, StudentCommandFactory.getInstance());
         commandFactories.put(MetaInfo.USER_MODE.Librarian, LibrarianCommandFactory.getInstance());
         commandFactories.put(MetaInfo.USER_MODE.Kernel, KernelCommandFactory.getInstance());
+        commandFactories.put(MetaInfo.USER_MODE.Alias, AliasCommandFactory.getInstance());
     }
     
     public static CommandCenter getInstance() {

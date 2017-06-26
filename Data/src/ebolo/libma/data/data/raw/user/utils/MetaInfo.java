@@ -9,7 +9,7 @@ package ebolo.libma.data.data.raw.user.utils;
  */
 
 public class MetaInfo {
-    public enum USER_MODE {Student, Librarian, Kernel}
+    public enum USER_MODE {Student, Librarian, Kernel, Alias}
     
     public enum STUDENT_COURSE {
         Computer_Science,
