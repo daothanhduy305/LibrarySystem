@@ -65,7 +65,7 @@ public class BooksViewController implements Controller {
     @Override
     public void setUpUI() {
         // Set up UI for side bar
-        sideBar.setPrefWidth(ScreenUtils.getScreenWidth() * 0.15);
+        sideBar.setPrefWidth(ScreenUtils.getScreenWidth() * 0.2);
         sideBar.setMinWidth(sideBar.getPrefWidth());
         sideBar.setMaxWidth(sideBar.getPrefWidth());
         
@@ -187,6 +187,7 @@ public class BooksViewController implements Controller {
     
     @FXML
     private void chat() {
+        // TODO: replace with username
         BotInterface.getInstance().addText("Student", chatTextField.getText());
         Alias.getInstance().saySomething(chatTextField.getText());
         chatTextField.clear();
