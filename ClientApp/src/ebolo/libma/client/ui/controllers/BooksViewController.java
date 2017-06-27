@@ -1,8 +1,8 @@
 package ebolo.libma.client.ui.controllers;
 
+import ebolo.libma.assistant.Alias;
+import ebolo.libma.assistant.ui.BotInterface;
 import ebolo.libma.authenticate.ui.fxml.FxmlManager;
-import ebolo.libma.commons.assistant.proc.Alias;
-import ebolo.libma.commons.assistant.ui.BotInterface;
 import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;

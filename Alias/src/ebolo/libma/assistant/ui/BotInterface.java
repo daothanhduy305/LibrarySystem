@@ -1,4 +1,4 @@
-package ebolo.libma.commons.assistant.ui;
+package ebolo.libma.assistant.ui;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;

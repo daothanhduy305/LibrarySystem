@@ -1,6 +1,6 @@
-package ebolo.libma.commons.assistant.proc;
+package ebolo.libma.assistant;
 
-import ebolo.libma.commons.assistant.ui.BotInterface;
+import ebolo.libma.assistant.ui.BotInterface;
 import ebolo.libma.commons.commands.CommandUtils;
 import ebolo.libma.commons.net.StubCommunication;
 import ebolo.libma.data.data.raw.user.utils.MetaInfo;
