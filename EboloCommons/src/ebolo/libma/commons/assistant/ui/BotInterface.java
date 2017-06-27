@@ -10,7 +10,7 @@ import javafx.scene.text.TextFlow;
  * Class acts as the bridge between bot interface and internal classes
  *
  * @author Ebolo
- * @version 19/06/2017
+ * @version 27/06/2017
  * @since 19/06/2017
  */
 
@@ -28,11 +28,22 @@ public class BotInterface {
         return ourInstance;
     }
     
+    /**
+     * Setup bot interface with required UI components
+     *
+     * @param botInterface is where the main conversation is going on
+     * @param botStatus    is where Alias would update its status to
+     */
     public void setBotInterface(TextFlow botInterface, Text botStatus) {
         this.botInterface = botInterface.getChildren();
         this.botStatus = botStatus;
     }
     
+    /**
+     * Concatenate message to the conversation
+     * @param user Alias or ?
+     * @param message message content
+     */
     public void addText(String user, String message) {
         Platform.runLater(() -> {
             Text userName = new Text((botInterface.size() == 0 ? user : "\n" + user) + ": ");

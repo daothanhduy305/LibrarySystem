@@ -27,7 +27,7 @@ import java.util.Arrays;
  * Controller (for UI) of book table view tab
  *
  * @author Ebolo
- * @version 09/06/2017
+ * @version 27/06/2017
  * @since 09/06/2017
  */
 
