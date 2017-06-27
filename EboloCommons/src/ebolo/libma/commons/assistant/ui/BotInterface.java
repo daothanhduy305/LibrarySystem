@@ -1,8 +1,6 @@
 package ebolo.libma.commons.assistant.ui;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
@@ -18,17 +16,10 @@ import javafx.scene.text.TextFlow;
 
 public class BotInterface {
     private static BotInterface ourInstance;
-    private StringProperty aliasStatus;
     private ObservableList<Node> botInterface;
+    private Text botStatus;
     
     private BotInterface() {
-        aliasStatus = new SimpleStringProperty("");
-        aliasStatus.addListener(
-            (observable, oldValue, newValue) -> {
-                botInterface.remove(botInterface.size() - 1);
-                botInterface.add(new Text(newValue));
-            }
-        );
     }
     
     public static BotInterface getInstance() {
@@ -37,22 +28,22 @@ public class BotInterface {
         return ourInstance;
     }
     
-    public void setBotInterface(TextFlow botInterface) {
+    public void setBotInterface(TextFlow botInterface, Text botStatus) {
         this.botInterface = botInterface.getChildren();
-        this.botInterface.add(new Text(""));
+        this.botStatus = botStatus;
     }
     
     public void addText(String user, String message) {
         Platform.runLater(() -> {
-            Text userName = new Text(user + ": ");
+            Text userName = new Text((botInterface.size() == 0 ? user : "\n" + user) + ": ");
             userName.setStyle("-fx-font-weight: bold");
-            Text content = new Text(message + "\n");
-            botInterface.add(botInterface.size() - 1, userName);
-            botInterface.add(botInterface.size() - 1, content);
+            Text content = new Text(message);
+            botInterface.add(userName);
+            botInterface.add(content);
         });
     }
     
     public void setAliasStatus(String status) {
-        Platform.runLater(() -> aliasStatus.set(status.isEmpty() ? "" : "Alias is " + status));
+        Platform.runLater(() -> botStatus.setText(status.isEmpty() ? "" : "Alias is " + status));
     }
 }

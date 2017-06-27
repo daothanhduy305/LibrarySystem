@@ -55,7 +55,11 @@ public class Alias {
                     if (witConnection.getResponseCode() == 200) {
                         BufferedReader br = new BufferedReader(new InputStreamReader((witConnection.getInputStream())));
                         Document response = (Document) Document.parse(br.readLine()).get("entities");
-                        String intent = ((List<Document>) response.get("intent")).get(0).getString("value");
+                        String intent = "";
+                        try {
+                            intent = ((List<Document>) response.get("intent")).get(0).getString("value");
+                        } catch (NullPointerException ignored) {
+                        }
                         switch (intent) {
                             case "searchbook":
                                 new Thread(() -> searchBook(

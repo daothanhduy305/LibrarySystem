@@ -9,10 +9,13 @@ import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
 import ebolo.libma.data.db.local.BookListManager;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -51,6 +54,10 @@ public class BooksViewController implements Controller {
     @FXML
     private TextFlow botInterface;
     @FXML
+    private Text botStatus;
+    @FXML
+    private ScrollPane botScrollPane;
+    @FXML
     private TextField chatTextField;
     
     private BooksViewController() {
@@ -74,7 +81,13 @@ public class BooksViewController implements Controller {
         setUpTableUI();
         
         // Set up Alias interface
-        BotInterface.getInstance().setBotInterface(botInterface);
+        BotInterface.getInstance().setBotInterface(botInterface, botStatus);
+        botInterface.getChildren().addListener(
+            (ListChangeListener<Node>) ((change) -> {
+                botInterface.layout();
+                botScrollPane.layout();
+                botScrollPane.setVvalue(1.0f);
+            }));
     }
     
     @Override
