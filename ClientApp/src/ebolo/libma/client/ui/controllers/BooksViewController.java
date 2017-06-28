@@ -1,27 +1,18 @@
 package ebolo.libma.client.ui.controllers;
 
-import ebolo.libma.assistant.Alias;
-import ebolo.libma.assistant.ui.BotInterface;
 import ebolo.libma.authenticate.ui.fxml.FxmlManager;
-import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
 import ebolo.libma.data.db.local.BookListManager;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Controller (for UI) of book table view tab
@@ -36,11 +27,7 @@ public class BooksViewController implements Controller {
     private Stage bookInfoWindow;
     
     @FXML
-    private TextField searchBox;
-    @FXML
     private TableView<BookUIWrapper> booksTableView;
-    @FXML
-    private VBox sideBar;
     @FXML
     private TableColumn<BookUIWrapper, String> titleColumn, authorColumn, publisherColumn, yearColumn,
         categoriesColumn, languageColumn;
@@ -51,14 +38,6 @@ public class BooksViewController implements Controller {
     @FXML
     private TableColumn<BookUIWrapper, Boolean> availabilityColumn;
     
-    @FXML
-    private TextFlow botInterface;
-    @FXML
-    private Text botStatus;
-    @FXML
-    private ScrollPane botScrollPane;
-    @FXML
-    private TextField chatTextField;
     
     private BooksViewController() {
     }
@@ -72,22 +51,8 @@ public class BooksViewController implements Controller {
     @SuppressWarnings("Duplicates")
     @Override
     public void setUpUI() {
-        // Set up UI for side bar
-        sideBar.setPrefWidth(ScreenUtils.getScreenWidth() * 0.2);
-        sideBar.setMinWidth(sideBar.getPrefWidth());
-        sideBar.setMaxWidth(sideBar.getPrefWidth());
-        
         // Set up UI for the table view
         setUpTableUI();
-        
-        // Set up Alias interface
-        BotInterface.getInstance().setBotInterface(botInterface, botStatus);
-        botInterface.getChildren().addListener(
-            (ListChangeListener<Node>) ((change) -> {
-                botInterface.layout();
-                botScrollPane.layout();
-                botScrollPane.setVvalue(1.0f);
-            }));
     }
     
     @Override
@@ -98,14 +63,6 @@ public class BooksViewController implements Controller {
     @SuppressWarnings("unchecked")
     private void setUpTableUI() {
         // Set up general table UI
-        booksTableView.prefWidthProperty().bind(
-            AppMainController.getInstance().getMainPane()
-                .widthProperty()
-                .subtract(sideBar.getPrefWidth())
-        );
-        booksTableView.minWidthProperty().bind(booksTableView.prefWidthProperty());
-        booksTableView.maxWidthProperty().bind(booksTableView.prefWidthProperty());
-        
         booksTableView.setItems(BookListManager.getInstance().getUiWrapperSortedList());
         BookListManager
             .getInstance()
@@ -153,27 +110,6 @@ public class BooksViewController implements Controller {
         
         booksTableView.getSortOrder().setAll(titleColumn);
         
-        searchBox.textProperty().addListener((observable, oldValue, newValue) ->
-            BookListManager.getInstance().getUiWrapperFilteredList().setPredicate(
-                bookUIWrapper -> {
-                    boolean matched = true;
-                    for (String s : Arrays.asList(newValue.split(" "))) {
-                        s = s.toLowerCase();
-                        matched &= (s.isEmpty() ||
-                            bookUIWrapper.getTitle().toLowerCase().contains(s) ||
-                            bookUIWrapper.getAuthor().toLowerCase().contains(s) ||
-                            bookUIWrapper.getCategories().toLowerCase().contains(s) ||
-                            bookUIWrapper.getPublishedDate().contains(s) ||
-                            bookUIWrapper.getLanguage().toLowerCase().contains(s) ||
-                            bookUIWrapper.getPublisher().toLowerCase().contains(s) ||
-                            bookUIWrapper.getDescription().toLowerCase().contains(s)
-                        );
-                    }
-                    return matched;
-                }
-            )
-        );
-        
         booksTableView.setRowFactory(param -> {
             TableRow<BookUIWrapper> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -197,14 +133,5 @@ public class BooksViewController implements Controller {
             });
             return row;
         });
-    }
-    
-    @FXML
-    private void chat() {
-        // TODO: replace with username
-        String speech = chatTextField.getText();
-        BotInterface.getInstance().addText("Student", speech);
-        chatTextField.clear();
-        Alias.getInstance().saySomething(speech);
     }
 }

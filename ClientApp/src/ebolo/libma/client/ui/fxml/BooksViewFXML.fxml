@@ -1,73 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-          xmlns="http://javafx.com/javafx/8.0.112" fx:controller="ebolo.libma.client.ui.controllers.BooksViewController">
-    <columnConstraints>
-        <ColumnConstraints/>
-        <ColumnConstraints/>
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints/>
-        <RowConstraints/>
-    </rowConstraints>
-    <TableView fx:id="booksTableView" focusTraversable="false" pickOnBounds="false" tableMenuButtonVisible="true" GridPane.hgrow="ALWAYS"
-               GridPane.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Title"/>
-            <TableColumn fx:id="authorColumn" prefWidth="75.0" text="Authors"/>
-            <TableColumn fx:id="publisherColumn" prefWidth="75.0" text="Publisher"/>
-            <TableColumn fx:id="yearColumn" prefWidth="75.0" text="Year"/>
-            <TableColumn fx:id="categoriesColumn" prefWidth="75.0" text="Categories"/>
-            <TableColumn fx:id="languageColumn" prefWidth="75.0" text="Language"/>
-            <TableColumn fx:id="pagesColumn" prefWidth="75.0" text="Pages"/>
-            <TableColumn fx:id="periodColumn" prefWidth="75.0" text="Period"/>
-            <TableColumn fx:id="availabilityColumn" prefWidth="75.0" text="Availability"/>
-        </columns>
-    </TableView>
-    <VBox fx:id="sideBar" alignment="TOP_CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.vgrow="ALWAYS">
-        <padding>
-            <Insets left="10.0" right="25.0" top="10.0"/>
-        </padding>
-        <GridPane.margin>
-            <Insets/>
-        </GridPane.margin>
-        <TextField fx:id="searchBox" promptText="Search...">
-            <VBox.margin>
-                <Insets/>
-            </VBox.margin>
-        </TextField>
-        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-            <TextArea editable="false"/>
-            <ScrollPane fx:id="botScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER"
-                        style="-fx-background-color: transparent;" vvalue="1.0">
-                <VBox style="-fx-background-color: transparent;">
-                    <StackPane alignment="TOP_LEFT" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
-                        <TextFlow fx:id="botInterface" lineSpacing="2.0" style="-fx-background-color: transparent;"
-                                  textAlignment="JUSTIFY">
-                            <padding>
-                                <Insets bottom="2.0" left="7.0" right="7.0" top="5.0"/>
-                            </padding>
-                        </TextFlow>
-                    </StackPane>
-                    <StackPane alignment="BOTTOM_RIGHT" style="-fx-background-color: transparent;" VBox.vgrow="NEVER">
-                        <Text fx:id="botStatus" opacity="0.5" strokeType="OUTSIDE" strokeWidth="0.0">
-                            <StackPane.margin>
-                                <Insets bottom="5.0" left="7.0" right="7.0"/>
-                            </StackPane.margin>
-                            <font>
-                                <Font size="10.0"/>
-                            </font>
-                        </Text>
-                    </StackPane>
-                </VBox>
-            </ScrollPane>
-        </StackPane>
-        <TextField fx:id="chatTextField" onAction="#chat"/>
-    </VBox>
-</GridPane>
+<TableView xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+           xmlns="http://javafx.com/javafx/8.0.112" fx:controller="ebolo.libma.client.ui.controllers.BooksViewController"
+           fx:id="booksTableView" focusTraversable="false" pickOnBounds="false" tableMenuButtonVisible="true">
+    <columns>
+        <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Title"/>
+        <TableColumn fx:id="authorColumn" prefWidth="75.0" text="Authors"/>
+        <TableColumn fx:id="publisherColumn" prefWidth="75.0" text="Publisher"/>
+        <TableColumn fx:id="yearColumn" prefWidth="75.0" text="Year"/>
+        <TableColumn fx:id="categoriesColumn" prefWidth="75.0" text="Categories"/>
+        <TableColumn fx:id="languageColumn" prefWidth="75.0" text="Language"/>
+        <TableColumn fx:id="pagesColumn" prefWidth="75.0" text="Pages"/>
+        <TableColumn fx:id="periodColumn" prefWidth="75.0" text="Period"/>
+        <TableColumn fx:id="availabilityColumn" prefWidth="75.0" text="Availability"/>
+    </columns>
+</TableView>
