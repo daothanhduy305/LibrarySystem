@@ -63,7 +63,7 @@ public class AppMainController implements Controller {
     @Override
     public void setUpUI() {
         // Set up UI for side bar
-        sideBar.setPrefWidth(ScreenUtils.getScreenWidth() * 0.25);
+        sideBar.setPrefWidth(ScreenUtils.getScreenWidth() * 0.2);
         sideBar.setMinWidth(sideBar.getPrefWidth());
         sideBar.setMaxWidth(sideBar.getPrefWidth());
     
