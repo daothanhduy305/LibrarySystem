@@ -13,12 +13,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -36,11 +34,7 @@ public class BooksViewController implements Controller {
     private Stage addNewBookWindow, modifyBookWindow;
     
     @FXML
-    private TextField searchBox;
-    @FXML
     private TableView<BookUIWrapper> booksTableView;
-    @FXML
-    private VBox sideBar;
     @FXML
     private TableColumn<BookUIWrapper, String> titleColumn, authorColumn, publisherColumn, yearColumn, isbn10Column,
         isbn13Column, categoriesColumn, languageColumn;
@@ -124,31 +118,10 @@ public class BooksViewController implements Controller {
         modifyBookWindow.show();
     }
     
-    @SuppressWarnings("Duplicates")
+    @SuppressWarnings("Duplicates, unchecked")
     @Override
     public void setUpUI() {
-        // Set up UI for side bar
-        sideBar.setPrefWidth(ScreenUtils.getScreenWidth() * 0.15);
-        sideBar.setMinWidth(sideBar.getPrefWidth());
-        sideBar.setMaxWidth(sideBar.getPrefWidth());
-        
-        // Set up UI for the table view
-        setUpTableUI();
-    }
-    
-    @Override
-    public Window getWindow() {
-        return booksTableView.getScene().getWindow();
-    }
-    
-    @SuppressWarnings("unchecked")
-    private void setUpTableUI() {
         // Set up general table UI
-        booksTableView.prefWidthProperty().bind(
-            AppMainController.getInstance().getMainPane()
-                .widthProperty()
-                .subtract(sideBar.getPrefWidth())
-        );
         booksTableView.minWidthProperty().bind(booksTableView.prefWidthProperty());
         booksTableView.maxWidthProperty().bind(booksTableView.prefWidthProperty());
         
@@ -205,29 +178,6 @@ public class BooksViewController implements Controller {
         booksTableView.setOnContextMenuRequested(this::showContextMenu);
         booksTableView.getSortOrder().setAll(titleColumn);
         
-        searchBox.textProperty().addListener((observable, oldValue, newValue) ->
-            BookListManager.getInstance().getUiWrapperFilteredList().setPredicate(
-                bookUIWrapper -> {
-                    boolean matched = true;
-                    for (String s : Arrays.asList(newValue.split(" "))) {
-                        s = s.toLowerCase();
-                        matched &= (s.isEmpty() ||
-                            bookUIWrapper.getTitle().toLowerCase().contains(s) ||
-                            bookUIWrapper.getAuthor().toLowerCase().contains(s) ||
-                            bookUIWrapper.getCategories().toLowerCase().contains(s) ||
-                            bookUIWrapper.getPublishedDate().contains(s) ||
-                            bookUIWrapper.getLanguage().toLowerCase().contains(s) ||
-                            bookUIWrapper.getPublisher().toLowerCase().contains(s) ||
-                            bookUIWrapper.getDescription().toLowerCase().contains(s) ||
-                            bookUIWrapper.getIsbn10().toLowerCase().contains(s) ||
-                            bookUIWrapper.getIsbn13().toLowerCase().contains(s)
-                        );
-                    }
-                    return matched;
-                }
-            )
-        );
-        
         booksTableView.setRowFactory(param -> {
             TableRow<BookUIWrapper> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -241,6 +191,11 @@ public class BooksViewController implements Controller {
             });
             return row;
         });
+    }
+    
+    @Override
+    public Window getWindow() {
+        return booksTableView.getScene().getWindow();
     }
     
     private void showContextMenu(ContextMenuEvent event) {

@@ -15,5 +15,6 @@
     <orderEntry type="module" module-name="Data" />
     <orderEntry type="module" module-name="UserAuthenticate" />
     <orderEntry type="module" module-name="EboloCommons" />
+    <orderEntry type="module" module-name="Alias" />
   </component>
 </module>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112"
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mHolder" xmlns="http://javafx.com/javafx/8.0.112"
           fx:controller="ebolo.libma.management.ui.controllers.AppMainController">
     <columnConstraints>
+        <ColumnConstraints/>
         <ColumnConstraints/>
     </columnConstraints>
     <rowConstraints>
@@ -13,44 +17,71 @@
         <RowConstraints/>
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
-    <children>
-        <MenuBar GridPane.columnSpan="2147483647">
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Close"/>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Delete"/>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About"/>
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-        <TabPane fx:id="mainPane" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
-                 GridPane.vgrow="ALWAYS">
-            <tabs>
-                <Tab text="Books">
-                    <fx:include source="BooksViewFXML.fxml"/>
-                </Tab>
-                <Tab text="Students">
-                    <fx:include source="StudentsViewFXML.fxml"/>
-                </Tab>
-                <Tab text="Transactions">
-                    <fx:include source="TransactionsViewFXML.fxml"/>
-                </Tab>
-            </tabs>
-        </TabPane>
-        <Label fx:id="statusLabel" text="Ready." wrapText="true" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
-            <GridPane.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </GridPane.margin>
-        </Label>
-    </children>
+    <MenuBar GridPane.columnSpan="2147483647">
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem mnemonicParsing="false" text="Close"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+            <MenuItem mnemonicParsing="false" text="Delete"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" text="About"/>
+        </Menu>
+    </MenuBar>
+    <TabPane fx:id="mainPane" tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+        <Tab text="Books">
+            <fx:include source="BooksViewFXML.fxml"/>
+        </Tab>
+        <Tab text="Students">
+            <fx:include source="StudentsViewFXML.fxml"/>
+        </Tab>
+        <Tab text="Transactions">
+            <fx:include source="TransactionsViewFXML.fxml"/>
+        </Tab>
+    </TabPane>
+    <VBox fx:id="sideBar" alignment="TOP_CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1"
+          GridPane.vgrow="ALWAYS">
+        <padding>
+            <Insets left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <GridPane.margin>
+            <Insets/>
+        </GridPane.margin>
+        <TextField fx:id="searchBox" promptText="Search...">
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+        </TextField>
+        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <TextArea editable="false"/>
+            <ScrollPane fx:id="botScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;"
+                        vvalue="1.0">
+                <VBox style="-fx-background-color: transparent;">
+                    <StackPane alignment="TOP_LEFT" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                        <TextFlow fx:id="botInterface" lineSpacing="2.0" style="-fx-background-color: transparent;" textAlignment="JUSTIFY">
+                            <padding>
+                                <Insets bottom="2.0" left="7.0" right="7.0" top="5.0"/>
+                            </padding>
+                        </TextFlow>
+                    </StackPane>
+                    <StackPane alignment="BOTTOM_RIGHT" style="-fx-background-color: transparent;" VBox.vgrow="NEVER">
+                        <Text fx:id="botStatus" opacity="0.5" strokeType="OUTSIDE" strokeWidth="0.0">
+                            <StackPane.margin>
+                                <Insets bottom="5.0" left="7.0" right="7.0"/>
+                            </StackPane.margin>
+                            <font>
+                                <Font size="10.0"/>
+                            </font>
+                        </Text>
+                    </StackPane>
+                </VBox>
+            </ScrollPane>
+        </StackPane>
+        <TextField fx:id="chatTextField" onAction="#chat"/>
+    </VBox>
+    <Label fx:id="statusLabel" text="Ready." wrapText="true" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+        <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </GridPane.margin>
+    </Label>
 </GridPane>

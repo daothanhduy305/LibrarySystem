@@ -1,7 +1,6 @@
 package ebolo.libma.management.ui.controllers;
 
 import ebolo.libma.authenticate.ui.fxml.FxmlManager;
-import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
@@ -13,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -36,8 +34,6 @@ public class StudentsViewController implements Controller {
     @FXML
     private TableView<StudentUIWrapper> studentsTableView;
     @FXML
-    private VBox sideBar;
-    @FXML
     private TableColumn<StudentUIWrapper, String> studentIdColumn, usernameColumn, firstNameColumn, middleNameColumn,
         lastNameColumn, courseColumn;
     @FXML
@@ -58,24 +54,10 @@ public class StudentsViewController implements Controller {
     @SuppressWarnings("Duplicates")
     @Override
     public void setUpUI() {
-        // Set up UI for side bar
-        sideBar.setPrefWidth(ScreenUtils.getScreenWidth() * 0.15);
-        sideBar.setMinWidth(sideBar.getPrefWidth());
-        sideBar.setMaxWidth(sideBar.getPrefWidth());
-        
-        setUpTableUI();
-    }
-    
-    private void setUpTableUI() {
         // Set up general table UI
-        studentsTableView.prefWidthProperty().bind(
-            AppMainController.getInstance().getMainPane()
-                .widthProperty()
-                .subtract(sideBar.getPrefWidth())
-        );
         studentsTableView.minWidthProperty().bind(studentsTableView.prefWidthProperty());
         studentsTableView.maxWidthProperty().bind(studentsTableView.prefWidthProperty());
-        
+    
         studentIdColumn.setCellValueFactory(param -> param.getValue().studentIdProperty());
         usernameColumn.setCellValueFactory(param -> param.getValue().usernameProperty());
         firstNameColumn.setCellValueFactory(param -> param.getValue().firstNameProperty());
@@ -84,7 +66,7 @@ public class StudentsViewController implements Controller {
         courseColumn.setCellValueFactory(param -> param.getValue().courseProperty());
         intakeColumn.setCellValueFactory(new PropertyValueFactory<>("intake"));
         borrowingColumn.setCellValueFactory(new PropertyValueFactory<>("borrowing"));
-        
+    
         studentsTableView.setOnContextMenuRequested(this::showContextMenu);
         studentsTableView.setItems(StudentListManager.getInstance().getUiWrapperSortedList());
         studentsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
