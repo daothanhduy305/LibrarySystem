@@ -1,5 +1,9 @@
 package ebolo.libma.assistant;
 
+import ai.api.AIConfiguration;
+import ai.api.AIDataService;
+import ai.api.model.AIRequest;
+import ai.api.model.AIResponse;
 import ebolo.libma.assistant.ui.BotInterface;
 import ebolo.libma.commons.commands.CommandUtils;
 import ebolo.libma.commons.net.StubCommunication;
@@ -28,8 +32,11 @@ import java.util.stream.Collectors;
 
 public class Alias {
     private static Alias ourInstance;
+    private AIDataService dataService;
     
     private Alias() {
+        AIConfiguration configuration = new AIConfiguration(KeyConfigs.getApiAiKey());
+        dataService = new AIDataService(configuration);
     }
     
     public static Alias getInstance() {
@@ -56,35 +63,59 @@ public class Alias {
                     witConnection.setRequestMethod("GET");
                     witConnection.setRequestProperty("Accept", "application/json");
                     witConnection.setRequestProperty("Authorization", "Bearer " + KeyConfigs.getWitClientKey());
-                    
+    
+                    String intent = "";
                     if (witConnection.getResponseCode() == 200) { // Success code
                         // Get analysis
                         BufferedReader br = new BufferedReader(new InputStreamReader((witConnection.getInputStream())));
                         Document response = (Document) Document.parse(br.readLine()).get("entities");
                         // Get user's intent
-                        String intent = "";
                         try {
                             intent = ((List<Document>) response.get("intent")).get(0).getString("value");
                         } catch (NullPointerException ignored) {}
                         switch (intent) {
                             case "searchbook":
-                                new Thread(() -> searchBook(
-                                    ((List<Document>) response.get("keyword"))
-                                        .stream()
-                                        .map(document -> document.getString("value"))
-                                        .collect(Collectors.joining(" "))
-                                )).start();
+                                try {
+                                    searchBook(
+                                        ((List<Document>) response.get("keyword"))
+                                            .stream()
+                                            .map(document -> document.getString("value"))
+                                            .collect(Collectors.joining(" "))
+                                    );
+                                } catch (Exception e) {
+                                    intent = "";
+                                }
                                 break;
                             default:
-                                BotInterface.getInstance().setAliasStatus("");
-                                BotInterface.getInstance().addText(
-                                    "Alias",
-                                    "Sorry but I'm not capable to do this at the moment!"
-                                );
+                                intent = "";
                                 break;
                         }
                     }
                     witConnection.disconnect();
+    
+                    // Fallback
+                    if (intent.isEmpty()) {
+                        new Thread(() -> {
+                            try {
+                                AIRequest fallbackRequest = new AIRequest(speech);
+                                AIResponse fallbackResponse = dataService.request(fallbackRequest);
+                                BotInterface.getInstance().setAliasStatus("");
+                                if (fallbackResponse.getStatus().getCode() == 200) { // Success code
+                                    BotInterface.getInstance().addText(
+                                        "Alias",
+                                        fallbackResponse.getResult().getFulfillment().getSpeech()
+                                    );
+                                } else {
+                                    BotInterface.getInstance().addText(
+                                        "Alias",
+                                        "Sorry but I'm not capable to do this at the moment!"
+                                    );
+                                }
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }).start();
+                    }
                 } catch (IOException e) {
                     BotInterface.getInstance().setAliasStatus("");
                     BotInterface.getInstance().addText(

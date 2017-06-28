@@ -11,5 +11,6 @@
     <orderEntry type="module" module-name="EboloCommons" />
     <orderEntry type="module" module-name="Data" />
     <orderEntry type="library" name="org.mongodb:mongo-java-driver:3.4.2" level="project" />
+    <orderEntry type="library" name="ai.api:libai:1.4.8" level="project" />
   </component>
 </module>
