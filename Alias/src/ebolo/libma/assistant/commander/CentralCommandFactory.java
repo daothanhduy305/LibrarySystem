@@ -19,6 +19,9 @@ import java.util.concurrent.Future;
 
 public class CentralCommandFactory implements ClientCommandFactory {
     private static CentralCommandFactory ourInstance;
+    /**
+     * This could be considered as a plug in for Alias
+     */
     private ClientCommandFactory extendedFactory;
     
     private CentralCommandFactory() {
