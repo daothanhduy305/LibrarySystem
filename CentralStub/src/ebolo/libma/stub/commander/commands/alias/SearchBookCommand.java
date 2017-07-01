@@ -1,8 +1,8 @@
 package ebolo.libma.stub.commander.commands.alias;
 
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
-import ebolo.libma.stub.commander.commands.Command;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
@@ -18,15 +18,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Command for Alias requesting a search for book(s) base on user's info
+ * StubCommand for Alias requesting a search for book(s) base on user's info
  *
  * @author Ebolo
  * @version 26/06/2017
- * @see Command
+ * @see StubCommand
  * @since 26/06/2017
  */
 
-public class SearchBookCommand extends Command {
+public class SearchBookCommand extends StubCommand {
     private String keyword;
     
     SearchBookCommand(SocketWrapper client, Object[] args) {

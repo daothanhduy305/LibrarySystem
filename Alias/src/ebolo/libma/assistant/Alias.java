@@ -2,15 +2,13 @@ package ebolo.libma.assistant;
 
 import ai.api.AIConfiguration;
 import ai.api.AIDataService;
+import ai.api.AIServiceException;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
+import ebolo.libma.assistant.commander.CentralCommandFactory;
 import ebolo.libma.assistant.ui.BotInterface;
-import ebolo.libma.commons.commands.CommandUtils;
-import ebolo.libma.commons.net.StubCommunication;
-import ebolo.libma.data.data.raw.user.utils.MetaInfo;
-import ebolo.libma.data.db.local.BookListManager;
+import ebolo.libma.commons.commands.factory.ClientCommandFactory;
 import ebolo.libma.generic.keys.KeyConfigs;
-import javafx.application.Platform;
 import org.bson.Document;
 
 import java.io.BufferedReader;
@@ -20,7 +18,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * The artificial assistant module of the system, can be integrated into client applications
@@ -64,59 +63,39 @@ public class Alias {
                     witConnection.setRequestProperty("Accept", "application/json");
                     witConnection.setRequestProperty("Authorization", "Bearer " + KeyConfigs.getWitClientKey());
     
-                    String intent = "";
+                    Future<String> success = null;
                     if (witConnection.getResponseCode() == 200) { // Success code
                         // Get analysis
                         BufferedReader br = new BufferedReader(new InputStreamReader((witConnection.getInputStream())));
                         Document response = (Document) Document.parse(br.readLine()).get("entities");
                         // Get user's intent
                         try {
-                            intent = ((List<Document>) response.get("intent")).get(0).getString("value");
+                            String intent = ((List<Document>) response.get("intent"))
+                                .get(0)
+                                .getString("value");
+                            success = CentralCommandFactory.getInstance().run(intent, response);
                         } catch (NullPointerException ignored) {}
-                        switch (intent) {
-                            case "searchbook":
-                                try {
-                                    searchBook(
-                                        ((List<Document>) response.get("keyword"))
-                                            .stream()
-                                            .map(document -> document.getString("value"))
-                                            .collect(Collectors.joining(" "))
-                                    );
-                                } catch (Exception e) {
-                                    intent = "";
-                                }
-                                break;
-                            default:
-                                intent = "";
-                                break;
-                        }
                     }
                     witConnection.disconnect();
     
-                    // Fallback
-                    if (intent.isEmpty()) {
-                        new Thread(() -> {
-                            try {
-                                AIRequest fallbackRequest = new AIRequest(speech);
-                                AIResponse fallbackResponse = dataService.request(fallbackRequest);
-                                BotInterface.getInstance().setAliasStatus("");
-                                if (fallbackResponse.getStatus().getCode() == 200) { // Success code
-                                    BotInterface.getInstance().addText(
-                                        "Alias",
-                                        fallbackResponse.getResult().getFulfillment().getSpeech()
-                                    );
-                                } else {
-                                    BotInterface.getInstance().addText(
-                                        "Alias",
-                                        "Sorry but I'm not capable to do this at the moment!"
-                                    );
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        }).start();
+                    // Fallback - failed maybe
+                    if (success == null || success.get().equals("failed")) {
+                        AIRequest fallbackRequest = new AIRequest(speech);
+                        AIResponse fallbackResponse = dataService.request(fallbackRequest);
+                        BotInterface.getInstance().setAliasStatus("");
+                        if (fallbackResponse.getStatus().getCode() == 200) { // Success code
+                            BotInterface.getInstance().addText(
+                                "Alias",
+                                fallbackResponse.getResult().getFulfillment().getSpeech()
+                            );
+                        } else {
+                            BotInterface.getInstance().addText(
+                                "Alias",
+                                "Sorry but I'm not capable to do this at the moment!"
+                            );
+                        }
                     }
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException | ExecutionException | AIServiceException e) {
                     BotInterface.getInstance().setAliasStatus("");
                     BotInterface.getInstance().addText(
                         "Alias",
@@ -132,38 +111,7 @@ public class Alias {
         }
     }
     
-    /**
-     * Send the extracted keyword (done by AI) to stub and get the result list
-     * @param keyword information that user wants to search for
-     */
-    @SuppressWarnings("unchecked")
-    private void searchBook(String keyword) {
-        CommandUtils.sendCommand(
-            MetaInfo.USER_MODE.Alias,
-            StubCommunication.getInstance().getStub(),
-            "search",
-            keyword
-        );
-        
-        try {
-            Document returnMessage = StubCommunication.getInstance().getStub().getMessageBuffer().take();
-            if (returnMessage.getString("message").equals("found")) {
-                List<String> bookObjIds = (List<String>) returnMessage.get("package");
-                BotInterface.getInstance().setAliasStatus("");
-                BotInterface.getInstance().addText(
-                    "Alias",
-                    "Here you go."
-                );
-                Platform.runLater(() -> BookListManager.getInstance().getUiWrapperFilteredList().setPredicate(
-                    bookUIWrapper -> bookObjIds.contains(bookUIWrapper.getObjectId())
-                ));
-            } else
-                BotInterface.getInstance().addText(
-                    "Alias",
-                    "Sorry but I found nothing."
-                );
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void setExtendedFactory(ClientCommandFactory extendedFactory) {
+        CentralCommandFactory.getInstance().setExtendedFactory(extendedFactory);
     }
 }

@@ -1,19 +1,19 @@
 package ebolo.libma.stub.commander.commands.alias;
 
+import ebolo.libma.commons.commands.command.StubCommand;
+import ebolo.libma.commons.commands.factory.StubCommandFactory;
 import ebolo.libma.commons.net.SocketWrapper;
-import ebolo.libma.stub.commander.commands.Command;
-import ebolo.libma.stub.commander.commands.CommandFactory;
 
 /**
  * Alias command factory manages available set of generic internal commands which are used by Alias
  *
  * @author Ebolo
  * @version 26/06/2017
- * @see CommandFactory
+ * @see StubCommandFactory
  * @since 26/06/2017
  */
 
-public class AliasCommandFactory implements CommandFactory {
+public class AliasCommandFactory implements StubCommandFactory {
     private static AliasCommandFactory ourInstance;
     
     private AliasCommandFactory() {
@@ -26,7 +26,7 @@ public class AliasCommandFactory implements CommandFactory {
     }
     
     @Override
-    public Command getCommand(SocketWrapper client, String command, Object[] args) {
+    public StubCommand getCommand(SocketWrapper client, String command, Object[] args) {
         switch (command) {
             case "search":
                 return new SearchBookCommand(client, args);
