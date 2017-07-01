@@ -7,7 +7,7 @@ import ebolo.libma.data.data.raw.book.Book;
 import ebolo.libma.data.data.raw.book.utils.BookLanguage;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
 import ebolo.libma.data.data.utils.exceptions.WrongISBN;
-import ebolo.libma.management.commander.BookCommands;
+import ebolo.libma.management.commander.CentralCommandFactory;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -28,8 +28,8 @@ import java.util.concurrent.Future;
  * @since 15/06/2017
  */
 
-public class EditBookController implements Controller {
-    private static EditBookController ourInstance;
+public class ModifyBookController implements Controller {
+    private static ModifyBookController ourInstance;
     private BookUIWrapper bookUIWrapper;
     
     @FXML
@@ -48,12 +48,12 @@ public class EditBookController implements Controller {
     
     private List<TextField> textFields;
     
-    private EditBookController() {
+    private ModifyBookController() {
     }
     
-    public static EditBookController getInstance() {
+    public static ModifyBookController getInstance() {
         if (ourInstance == null)
-            ourInstance = new EditBookController();
+            ourInstance = new ModifyBookController();
         return ourInstance;
     }
     
@@ -161,12 +161,16 @@ public class EditBookController implements Controller {
                 return;
             }
             try { // run command
-                Future<String> result = BookCommands.modifyBook(new Book(
-                    titleStr, authorsStr, publisherStr, dateStr,
-                    descriptionStr, categoriesStr,
-                    isbn10Str, isbn13Str, langStr,
-                    pages, unit, unitAvailable, period, available
-                ), bookUIWrapper);
+                Future<String> result = CentralCommandFactory.getInstance().run(
+                    "book.modify_book",
+                    new Book(
+                        titleStr, authorsStr, publisherStr, dateStr,
+                        descriptionStr, categoriesStr,
+                        isbn10Str, isbn13Str, langStr,
+                        pages, unit, unitAvailable, period, available
+                    ),
+                    bookUIWrapper
+                );
                 // show result to user
                 String resultMessage = result.get();
                 if (!resultMessage.equals("success")) {

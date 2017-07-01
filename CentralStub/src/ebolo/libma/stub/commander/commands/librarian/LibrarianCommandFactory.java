@@ -1,19 +1,19 @@
 package ebolo.libma.stub.commander.commands.librarian;
 
+import ebolo.libma.commons.commands.command.StubCommand;
+import ebolo.libma.commons.commands.factory.StubCommandFactory;
 import ebolo.libma.commons.net.SocketWrapper;
-import ebolo.libma.stub.commander.commands.Command;
-import ebolo.libma.stub.commander.commands.CommandFactory;
 
 /**
  * Librarian command factory manages available set of internal commands for librarian users only
  *
  * @author Ebolo
  * @version 07/06/2017
- * @see CommandFactory
+ * @see StubCommandFactory
  * @since 06/06/2017
  */
 
-public class LibrarianCommandFactory implements CommandFactory {
+public class LibrarianCommandFactory implements StubCommandFactory {
     private static LibrarianCommandFactory ourInstance;
     
     private LibrarianCommandFactory() {
@@ -26,7 +26,7 @@ public class LibrarianCommandFactory implements CommandFactory {
     }
     
     @Override
-    public Command getCommand(SocketWrapper client, String command, Object[] args) {
+    public StubCommand getCommand(SocketWrapper client, String command, Object[] args) {
         switch (command) {
             case "add_book":
                 return new AddBookCommand(client, args);

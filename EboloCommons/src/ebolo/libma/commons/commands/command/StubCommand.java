@@ -1,25 +1,24 @@
-package ebolo.libma.stub.commander.commands;
+package ebolo.libma.commons.commands.command;
 
 import com.sun.istack.internal.Nullable;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
 
 /**
- * Internal command. An internal command consists of a client, command arguments. It would be fed with a checking function
+ * Internal stub command consists of a client, command arguments. It would be fed with a checking function
  * to check the correctness of the command, an onSuccess action and a illegalAction fallback
  *
  * @author Ebolo
- * @version 06/06/2017
+ * @version 28/06/2017
  * @since 06/06/2017
  */
 
-public abstract class Command implements Runnable {
+public abstract class StubCommand extends Command<String> {
     protected final SocketWrapper client;
-    protected Object[] args;
     protected String failedReason = "Internal command error!";
     
-    protected Command(@Nullable SocketWrapper client, Object[] args) {
-        this.args = args;
+    protected StubCommand(@Nullable SocketWrapper client, Object... args) {
+        super(args);
         this.client = client;
     }
     
@@ -35,7 +34,7 @@ public abstract class Command implements Runnable {
     }
     
     @Override
-    public void run() {
+    public String call() {
         synchronized (client) {
             try {
                 if (checkCorrectness()) {
@@ -43,6 +42,7 @@ public abstract class Command implements Runnable {
                         throw new Exception();
                 } else
                     throw new Exception();
+                return "success";
             } catch (Exception e) {
                 // TODO: wrong command -> fallback
                 try {
@@ -50,6 +50,7 @@ public abstract class Command implements Runnable {
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
+                return "failed";
             }
         }
     }

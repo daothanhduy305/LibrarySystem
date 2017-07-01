@@ -1,10 +1,10 @@
 package ebolo.libma.stub.commander.commands.librarian;
 
 import com.mongodb.client.result.UpdateResult;
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.book.Book;
-import ebolo.libma.stub.commander.commands.Command;
 import ebolo.libma.stub.db.DbPortal;
 import ebolo.libma.stub.db.updates.UpdateFactory;
 import ebolo.libma.stub.net.managers.ActiveUserManager;
@@ -14,15 +14,15 @@ import org.bson.types.ObjectId;
 import java.util.Collections;
 
 /**
- * Command for librarian modifying a book's info
+ * StubCommand for librarian modifying a book's info
  *
  * @author Ebolo
  * @version 16/06/2017
- * @see Command
+ * @see StubCommand
  * @since 16/06/2017
  */
 
-public class ModifyCommand extends Command {
+public class ModifyCommand extends StubCommand {
     private Book modifiedBook;
     private String bookObjId;
     

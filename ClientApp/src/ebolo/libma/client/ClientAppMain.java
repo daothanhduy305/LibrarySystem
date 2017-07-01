@@ -7,8 +7,8 @@ import ebolo.libma.client.ui.controllers.StudentsViewController;
 import ebolo.libma.client.ui.fxml.FxmlManager;
 import ebolo.libma.client.utils.configs.AppConfigurations;
 import ebolo.libma.client.utils.session.SessionInfo;
-import ebolo.libma.commons.commands.CommandProcessor;
 import ebolo.libma.commons.commands.CommandUtils;
+import ebolo.libma.commons.commands.proc.SingleCommandProcessor;
 import ebolo.libma.commons.net.StubCommunication;
 import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
@@ -106,6 +106,6 @@ public class ClientAppMain extends Application {
     
     private void close() {
         StubCommunication.getInstance().stopStubCommunication();
-        CommandProcessor.getInstance().shutdown();
+        SingleCommandProcessor.getInstance().shutdown();
     }
 }

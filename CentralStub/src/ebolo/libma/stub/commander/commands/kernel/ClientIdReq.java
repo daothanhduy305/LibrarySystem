@@ -1,19 +1,19 @@
 package ebolo.libma.stub.commander.commands.kernel;
 
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
-import ebolo.libma.stub.commander.commands.Command;
 
 /**
- * Command for a client requiring his/her info
+ * StubCommand for a client requiring his/her info
  *
  * @author Ebolo
  * @version 20/06/2017
- * @see Command
+ * @see StubCommand
  * @since 20/06/2017
  */
 
-public class ClientIdReq extends Command {
+public class ClientIdReq extends StubCommand {
     
     ClientIdReq(SocketWrapper client, Object[] args) {
         super(client, args);

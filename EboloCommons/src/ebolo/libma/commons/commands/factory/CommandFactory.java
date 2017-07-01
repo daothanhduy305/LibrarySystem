@@ -1,24 +1,22 @@
-package ebolo.libma.stub.commander.commands;
+package ebolo.libma.commons.commands.factory;
 
-import com.sun.istack.internal.Nullable;
-import ebolo.libma.commons.net.SocketWrapper;
+import ebolo.libma.commons.commands.command.Command;
 
 /**
  * Interface for classes that serve as factory producing internal commands
  *
  * @author Ebolo
- * @version 07/06/2017
- * @since 06/06/2017
+ * @version 28/06/2017
+ * @since 28/06/2017
  */
 
-public interface CommandFactory {
+public interface CommandFactory<V> {
     /**
      * This method would fetch the appropriate command based on the arguments
      *
-     * @param client  command source
      * @param command command keyword
      * @param args    command arguments
      * @return the appropriate internal command
      */
-    Command getCommand(@Nullable SocketWrapper client, String command, Object[] args);
+    Command<V> getCommand(String command, Object... args);
 }

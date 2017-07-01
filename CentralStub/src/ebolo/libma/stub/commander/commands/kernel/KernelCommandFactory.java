@@ -1,19 +1,19 @@
 package ebolo.libma.stub.commander.commands.kernel;
 
+import ebolo.libma.commons.commands.command.StubCommand;
+import ebolo.libma.commons.commands.factory.StubCommandFactory;
 import ebolo.libma.commons.net.SocketWrapper;
-import ebolo.libma.stub.commander.commands.Command;
-import ebolo.libma.stub.commander.commands.CommandFactory;
 
 /**
  * Kernel command factory manages available set of generic internal commands which are used by either students or librarian
  *
  * @author Ebolo
  * @version 07/06/2017
- * @see CommandFactory
+ * @see StubCommandFactory
  * @since 06/06/2017
  */
 
-public class KernelCommandFactory implements CommandFactory {
+public class KernelCommandFactory implements StubCommandFactory {
     private static KernelCommandFactory ourInstance;
     
     private KernelCommandFactory() {
@@ -26,7 +26,7 @@ public class KernelCommandFactory implements CommandFactory {
     }
     
     @Override
-    public Command getCommand(SocketWrapper client, String command, Object[] args) {
+    public StubCommand getCommand(SocketWrapper client, String command, Object[] args) {
         switch (command) {
             case "auth":
                 return new AuthenticationCommand(client, args);

@@ -1,8 +1,9 @@
 package ebolo.libma.management;
 
+import ebolo.libma.assistant.Alias;
 import ebolo.libma.authenticate.UserAuthenticationUI;
-import ebolo.libma.commons.commands.CommandProcessor;
 import ebolo.libma.commons.commands.CommandUtils;
+import ebolo.libma.commons.commands.proc.SingleCommandProcessor;
 import ebolo.libma.commons.net.StubCommunication;
 import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
@@ -19,6 +20,7 @@ import ebolo.libma.data.data.ui.user.StudentUIWrapper;
 import ebolo.libma.data.db.local.BookListManager;
 import ebolo.libma.data.db.local.StudentListManager;
 import ebolo.libma.data.db.local.TransactionListManager;
+import ebolo.libma.management.commander.CentralCommandFactory;
 import ebolo.libma.management.ui.controllers.AppMainController;
 import ebolo.libma.management.ui.controllers.BooksViewController;
 import ebolo.libma.management.ui.controllers.StudentsViewController;
@@ -84,7 +86,7 @@ public class ManagementAppMain extends Application {
                 TransactionListManager.getInstance().setInfo(
                     "Transaction", AppConfigurations.getWorkingDir(), TransactionWrapper::new, TransactionUIWrapper::new
                 );
-                
+    
                 StubCommunication.getInstance().startBookMonitorThreads();
                 StubCommunication.getInstance().startStudentMonitorThreads();
                 StubCommunication.getInstance().startTransactionMonitorThreads();
@@ -128,6 +130,8 @@ public class ManagementAppMain extends Application {
                         "transaction"
                     );
                 }).start();
+    
+                new Thread(() -> Alias.getInstance().setExtendedFactory(CentralCommandFactory.getInstance())).start();
             },
             this::close // onExit
         );
@@ -135,6 +139,6 @@ public class ManagementAppMain extends Application {
     
     private void close() {
         StubCommunication.getInstance().stopStubCommunication();
-        CommandProcessor.getInstance().shutdown();
+        SingleCommandProcessor.getInstance().shutdown();
     }
 }

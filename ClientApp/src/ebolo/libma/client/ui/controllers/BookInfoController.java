@@ -1,6 +1,6 @@
 package ebolo.libma.client.ui.controllers;
 
-import ebolo.libma.client.commander.StudentCommands;
+import ebolo.libma.client.commander.StudentCommandFactory;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
@@ -76,7 +76,7 @@ public class BookInfoController implements Controller {
     private void reserve() {
         final String bookObjId = bookUIWrapper.getObjectId();
         new Thread(() -> {
-            Future<String> result = StudentCommands.reserveBook(bookObjId);
+            Future<String> result = StudentCommandFactory.getInstance().run("reserve", new String[]{bookObjId});
             String resultMessage = "";
             try {
                 resultMessage = result.get();

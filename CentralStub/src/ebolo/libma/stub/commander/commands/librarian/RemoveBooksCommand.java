@@ -1,8 +1,8 @@
 package ebolo.libma.stub.commander.commands.librarian;
 
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
-import ebolo.libma.stub.commander.commands.Command;
 import ebolo.libma.stub.db.DbPortal;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Command for librarian removing a list of books
+ * StubCommand for librarian removing a list of books
  *
  * @author Ebolo
  * @version 13/06/2017
- * @see Command
+ * @see StubCommand
  * @since 13/06/2017
  */
 
-public class RemoveBooksCommand extends Command {
+public class RemoveBooksCommand extends StubCommand {
     private List<String> bookObjIds;
     
     RemoveBooksCommand(SocketWrapper client, Object[] args) {

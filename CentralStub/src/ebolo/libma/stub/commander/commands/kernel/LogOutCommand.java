@@ -1,19 +1,19 @@
 package ebolo.libma.stub.commander.commands.kernel;
 
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.SocketWrapper;
-import ebolo.libma.stub.commander.commands.Command;
 import ebolo.libma.stub.net.managers.ActiveUserManager;
 
 /**
- * Command for a user requiring a log out
+ * StubCommand for a user requiring a log out
  *
  * @author Ebolo
  * @version 14/06/2017
- * @see Command
+ * @see StubCommand
  * @since 14/06/2017
  */
 
-public class LogOutCommand extends Command {
+public class LogOutCommand extends StubCommand {
     LogOutCommand(SocketWrapper client, Object[] args) {
         super(client, args);
     }

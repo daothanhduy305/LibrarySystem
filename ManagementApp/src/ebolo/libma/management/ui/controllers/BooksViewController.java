@@ -1,13 +1,13 @@
 package ebolo.libma.management.ui.controllers;
 
-import ebolo.libma.authenticate.ui.fxml.FxmlManager;
 import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
 import ebolo.libma.data.db.local.BookListManager;
-import ebolo.libma.management.commander.BookCommands;
+import ebolo.libma.management.commander.CentralCommandFactory;
+import ebolo.libma.management.ui.fxml.FxmlManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -56,7 +56,7 @@ public class BooksViewController implements Controller {
         return ourInstance;
     }
     
-    private void addNewBook() throws IOException {
+    public void addNewBook() throws IOException {
         if (addNewBookWindow == null) {
             AddBookController addBookController = AddBookController.getInstance();
             AddBookIsbnController addBookIsbnController = AddBookIsbnController.getInstance();
@@ -85,7 +85,10 @@ public class BooksViewController implements Controller {
             .getSelectionModel()
             .getSelectedItems();
         new Thread(() -> {
-            Future<String> result = BookCommands.removeBook(deletingBooks);
+            Future<String> result = CentralCommandFactory.getInstance().run(
+                "book.delete_books",
+                deletingBooks
+            );
             try {
                 String resultMessage = result.get();
                 if (!resultMessage.equals("success")) {
@@ -105,16 +108,16 @@ public class BooksViewController implements Controller {
             .getSelectionModel()
             .getSelectedItems().get(0);
         if (modifyBookWindow == null) {
-            EditBookController editBookController = EditBookController.getInstance();
+            ModifyBookController modifyBookController = ModifyBookController.getInstance();
             modifyBookWindow = UIFactory.createWindow(
                 "Modifying " + modifyingBook.getTitle(),
                 FxmlManager.getInstance().getFxmlTemplate("EditBookFXML"),
                 null, 0, 0,
-                new ControllerWrapper(editBookController.getClass(), editBookController)
+                new ControllerWrapper(modifyBookController.getClass(), modifyBookController)
             );
-            editBookController.setUpUI();
+            modifyBookController.setUpUI();
         }
-        EditBookController.getInstance().setBookUIWrapper(modifyingBook);
+        ModifyBookController.getInstance().setBookUIWrapper(modifyingBook);
         modifyBookWindow.show();
     }
     

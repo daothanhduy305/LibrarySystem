@@ -6,7 +6,7 @@ import ebolo.libma.commons.utils.Time;
 import ebolo.libma.data.data.raw.book.Book;
 import ebolo.libma.data.data.utils.exceptions.BookNotFound;
 import ebolo.libma.data.data.utils.exceptions.WrongISBN;
-import ebolo.libma.management.commander.BookCommands;
+import ebolo.libma.management.commander.CentralCommandFactory;
 import ebolo.libma.management.utils.configs.AppConfigurations;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -83,9 +83,10 @@ public class AddBookIsbnController implements Controller {
                     return;
                 }
                 // start command
-                Future<String> result = BookCommands.addNewBook(new Book(
-                    isbnStr, unit, period, available
-                ));
+                Future<String> result = CentralCommandFactory.getInstance().run(
+                    "book.add_book",
+                    new Book(isbnStr, unit, period, available)
+                );
                 // show result to user
                 final String resultMes = result.get();
                 if (!resultMes.equals("success"))

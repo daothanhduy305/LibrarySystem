@@ -1,9 +1,9 @@
 package ebolo.libma.stub.commander.commands.librarian;
 
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.book.Book;
-import ebolo.libma.stub.commander.commands.Command;
 import ebolo.libma.stub.db.DbPortal;
 import ebolo.libma.stub.db.updates.UpdateFactory;
 import ebolo.libma.stub.net.managers.ActiveUserManager;
@@ -13,14 +13,14 @@ import org.bson.types.ObjectId;
 import java.util.Collections;
 
 /**
- * Command for librarian add new book
+ * StubCommand for librarian add new book
  *
  * @author Ebolo
  * @version 09/06/2017
- * @see Command
+ * @see StubCommand
  * @since 09/06/2017
  */
-public class AddBookCommand extends Command {
+public class AddBookCommand extends StubCommand {
     private Book book;
     
     AddBookCommand(SocketWrapper client, Object[] args) {

@@ -3,25 +3,25 @@ package ebolo.libma.stub.commander.commands.student;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import com.sun.istack.internal.Nullable;
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.transaction.Transaction;
 import ebolo.libma.data.data.raw.transaction.TransactionWrapper;
-import ebolo.libma.stub.commander.commands.Command;
 import ebolo.libma.stub.db.DbPortal;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 /**
- * Command for student reserving an available book
+ * StubCommand for student reserving an available book
  *
  * @author Ebolo
  * @version 07/06/2017
- * @see Command
+ * @see StubCommand
  * @since 06/06/2017
  */
 
-public class ReserveCommand extends Command {
+public class ReserveCommand extends StubCommand {
     /**
      * Transaction made by the student on client side
      */

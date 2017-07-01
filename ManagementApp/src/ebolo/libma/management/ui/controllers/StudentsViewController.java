@@ -1,12 +1,12 @@
 package ebolo.libma.management.ui.controllers;
 
-import ebolo.libma.authenticate.ui.fxml.FxmlManager;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
 import ebolo.libma.data.data.ui.user.StudentUIWrapper;
 import ebolo.libma.data.db.local.StudentListManager;
-import ebolo.libma.management.commander.StudentCommands;
+import ebolo.libma.management.commander.CentralCommandFactory;
+import ebolo.libma.management.ui.fxml.FxmlManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -95,7 +95,10 @@ public class StudentsViewController implements Controller {
             .getSelectionModel()
             .getSelectedItems();
         new Thread(() -> {
-            Future<String> result = StudentCommands.removeStudent(deletingStudents);
+            Future<String> result = CentralCommandFactory.getInstance().run(
+                "student.delete_students",
+                deletingStudents
+            );
             try {
                 String resultMessage = result.get();
                 if (!resultMessage.equals("success")) {

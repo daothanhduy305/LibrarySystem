@@ -1,35 +1,27 @@
-package ebolo.libma.commons.commands;
+package ebolo.libma.commons.commands.proc;
+
+import ebolo.libma.commons.commands.command.Command;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is where the commands being processed for client applications
+ * Central processing unit abstract class for processing commands
  *
  * @author Ebolo
- * @version 15/06/2017
- * @since 15/06/2017
+ * @version 28/06/2017
+ * @since 28/06/2017
  */
 
-public class CommandProcessor {
-    private static CommandProcessor ourInstance;
-    private ExecutorService executorService;
+public abstract class CommandProcessor<V> {
+    ExecutorService executorService;
     
-    private CommandProcessor() {
-        executorService = Executors.newSingleThreadExecutor();
-    }
-    
-    public static CommandProcessor getInstance() {
-        if (ourInstance == null)
-            ourInstance = new CommandProcessor();
-        return ourInstance;
-    }
-    
-    public ExecutorService getExecutorService() {
-        return executorService;
+    @SuppressWarnings("unchecked")
+    public Future<V> submitCommand(Command command) {
+        return executorService.submit(command);
     }
     
     public void shutdown() {

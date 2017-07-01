@@ -4,7 +4,7 @@ import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.data.data.raw.user.Student;
 import ebolo.libma.data.data.raw.user.utils.MetaInfo;
-import ebolo.libma.management.commander.StudentCommands;
+import ebolo.libma.management.commander.CentralCommandFactory;
 import ebolo.libma.management.utils.configs.AppConfigurations;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -75,10 +75,13 @@ public class AddStudentController implements Controller {
             }
             String password = "defaultPassword"; // TODO use password generator here
             // start command
-            Future<String> result = StudentCommands.addNewStudent(new Student(
-                fNameStr, mNameStr, lNameStr, emailStr, usernameStr, password,
-                MetaInfo.STUDENT_COURSE.valueOf(courseStr), year, idStr
-            ));
+            Future<String> result = CentralCommandFactory.getInstance().run(
+                "student.add_student",
+                new Student(
+                    fNameStr, mNameStr, lNameStr, emailStr, usernameStr, password,
+                    MetaInfo.STUDENT_COURSE.valueOf(courseStr), year, idStr
+                )
+            );
             // show result to user
             final String resultMes;
             try {

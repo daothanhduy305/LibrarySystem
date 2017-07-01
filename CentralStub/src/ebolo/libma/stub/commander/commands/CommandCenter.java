@@ -1,6 +1,8 @@
 package ebolo.libma.stub.commander.commands;
 
 import com.sun.istack.internal.Nullable;
+import ebolo.libma.commons.commands.factory.StubCommandFactory;
+import ebolo.libma.commons.commands.proc.MultiCommandProcessor;
 import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.user.utils.MetaInfo;
 import ebolo.libma.stub.commander.commands.alias.AliasCommandFactory;
@@ -25,7 +27,7 @@ public class CommandCenter {
     /**
      * List of commands factory that can be used to produce internal command signals
      */
-    private Map<MetaInfo.USER_MODE, CommandFactory> commandFactories;
+    private Map<MetaInfo.USER_MODE, StubCommandFactory> commandFactories;
     
     private CommandCenter() {
         commandFactories = new HashMap<>();
@@ -57,7 +59,7 @@ public class CommandCenter {
             if (userMode == null || commandString.isEmpty() || args == null || args.length == 0)
                 throw new ClassCastException(); // wrong command
             else {
-                CommandProcessor.getInstance().addNewCommand(
+                MultiCommandProcessor.getInstance().submitCommand(
                     commandFactories.get(userMode).getCommand(client, commandString, args)
                 );
             }

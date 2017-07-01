@@ -10,6 +10,6 @@ package ebolo.libma.commons.utils.exceptions;
 public class CommandFormatException extends Exception {
     @Override
     public void printStackTrace() {
-        System.err.println("Command format is wrong! Please check the arguments!");
+        System.err.println("StubCommand format is wrong! Please check the arguments!");
     }
 }

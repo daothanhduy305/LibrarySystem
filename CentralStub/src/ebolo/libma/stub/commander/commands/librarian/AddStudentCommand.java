@@ -1,23 +1,23 @@
 package ebolo.libma.stub.commander.commands.librarian;
 
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.user.Student;
-import ebolo.libma.stub.commander.commands.Command;
 import ebolo.libma.stub.db.DbPortal;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 /**
- * Command for librarian add new student
+ * StubCommand for librarian add new student
  *
  * @author Ebolo
  * @version 13/06/2017
- * @see Command
+ * @see StubCommand
  * @since 13/06/2017
  */
 
-public class AddStudentCommand extends Command {
+public class AddStudentCommand extends StubCommand {
     private Student student;
     
     AddStudentCommand(SocketWrapper client, Object[] args) {

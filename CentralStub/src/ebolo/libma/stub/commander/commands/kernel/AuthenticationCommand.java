@@ -1,23 +1,23 @@
 package ebolo.libma.stub.commander.commands.kernel;
 
+import ebolo.libma.commons.commands.command.StubCommand;
 import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.user.utils.MetaInfo;
-import ebolo.libma.stub.commander.commands.Command;
 import ebolo.libma.stub.db.DbPortal;
 import ebolo.libma.stub.net.managers.ActiveUserManager;
 import org.bson.Document;
 
 /**
- * Command for a user requiring a log out
+ * StubCommand for a user requiring a log out
  *
  * @author Ebolo
  * @version 07/06/2017
- * @see Command
+ * @see StubCommand
  * @since 07/06/2017
  */
 
-public class AuthenticationCommand extends Command {
+public class AuthenticationCommand extends StubCommand {
     private String[] translatedArgs;
     
     AuthenticationCommand(SocketWrapper client, Object[] args) {
