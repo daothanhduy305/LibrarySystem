@@ -39,6 +39,14 @@ public class StudentUIWrapper extends UserUIWrapper<Student> {
         return studentId;
     }
     
+    public IntegerProperty borrowingProperty() {
+        return borrowing;
+    }
+    
+    public IntegerProperty intakeProperty() {
+        return intake;
+    }
+    
     @Override
     public void update(Student student) {
         super.update(student);

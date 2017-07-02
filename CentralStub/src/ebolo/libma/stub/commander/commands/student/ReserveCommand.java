@@ -94,8 +94,13 @@ public class ReserveCommand extends StubCommand {
                     transactionDoc.put("last_modified", currentTime);
                     DbPortal.getInstance().getTransactionDb().insertOne(transactionDoc);
                     // Update other clients
+                    // First we need to update book's info to all clients
                     ActiveUserManager.getInstance().sendMessageToAll(null, UpdateFactory.createUpdate(
                         Collections.singletonList(bookDb.find(new Document("_id", bookObjId)).first()), "book"
+                    ));
+                    // And then update student's info to librarians
+                    ActiveUserManager.getInstance().sendMessageToAllLibrarians(null, UpdateFactory.createUpdate(
+                        Collections.singletonList(bookDb.find(new Document("_id", studentObjId)).first()), "student"
                     ));
                     
                     // Finally send out the transaction wrapper back to client
