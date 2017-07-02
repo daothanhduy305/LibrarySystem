@@ -13,14 +13,12 @@ import ebolo.libma.commons.net.StubCommunication;
 import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
-import ebolo.libma.commons.ui.utils.WindowMonitor;
 import ebolo.libma.data.data.raw.book.Book;
 import ebolo.libma.data.data.raw.user.utils.MetaInfo;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
 import ebolo.libma.data.db.local.BookListManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
 
 /**
  * Main class for client application
@@ -53,7 +51,6 @@ public class ClientAppMain extends Application {
             new ControllerWrapper(studentsViewController.getClass(), studentsViewController)
         );
         primaryStage.setMaximized(true);
-        WindowMonitor.getInstance().setWindow(primaryStage);
         appMainController.setUpUI();
         primaryStage.setOnCloseRequest(event -> close());
         

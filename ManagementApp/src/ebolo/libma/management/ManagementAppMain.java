@@ -7,7 +7,6 @@ import ebolo.libma.commons.net.StubCommunication;
 import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
-import ebolo.libma.commons.ui.utils.WindowMonitor;
 import ebolo.libma.data.data.raw.book.Book;
 import ebolo.libma.data.data.raw.transaction.TransactionWrapper;
 import ebolo.libma.data.data.raw.user.Student;
@@ -62,7 +61,6 @@ public class ManagementAppMain extends Application {
             new ControllerWrapper(transactionsViewController.getClass(), transactionsViewController)
         );
         primaryStage.setMaximized(true);
-        WindowMonitor.getInstance().setWindow(primaryStage);
         appMainController.setUpUI();
         primaryStage.setOnCloseRequest(event -> close());
         
