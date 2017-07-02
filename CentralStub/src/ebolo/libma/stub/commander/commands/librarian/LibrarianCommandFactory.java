@@ -37,7 +37,7 @@ public class LibrarianCommandFactory implements StubCommandFactory {
             case "remove_students":
                 return new RemoveStudentsCommand(client, args);
             case "modify_book":
-                return new ModifyCommand(client, args);
+                return new ModifyBookCommand(client, args);
         }
         return null;
     }

@@ -5,8 +5,12 @@ import ebolo.libma.commons.net.Message;
 import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.user.Student;
 import ebolo.libma.stub.db.DbPortal;
+import ebolo.libma.stub.db.updates.UpdateFactory;
+import ebolo.libma.stub.net.managers.ActiveUserManager;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+
+import java.util.Collections;
 
 /**
  * StubCommand for librarian add new student
@@ -55,6 +59,9 @@ public class AddStudentCommand extends StubCommand {
             // if everything is ok then send back success message to client
             if (studentObjectId != null) {
                 client.sendMessage(Message.messageGenerate("success", studentObjectId.toString()));
+                ActiveUserManager.getInstance().sendMessageToAllLibrarians(client.getClientId(), UpdateFactory.createUpdate(
+                    Collections.singletonList(studentDocument), "student"
+                ));
                 return true;
             } else
                 failedReason = "Something went wrong. Cannot insert new student into database!";

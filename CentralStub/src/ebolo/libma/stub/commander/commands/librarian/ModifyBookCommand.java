@@ -22,11 +22,11 @@ import java.util.Collections;
  * @since 16/06/2017
  */
 
-public class ModifyCommand extends StubCommand {
+public class ModifyBookCommand extends StubCommand {
     private Book modifiedBook;
     private String bookObjId;
     
-    ModifyCommand(SocketWrapper client, Object[] args) {
+    ModifyBookCommand(SocketWrapper client, Object[] args) {
         super(client, args);
     }
     

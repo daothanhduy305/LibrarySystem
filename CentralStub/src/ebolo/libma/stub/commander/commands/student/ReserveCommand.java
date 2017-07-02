@@ -9,8 +9,12 @@ import ebolo.libma.commons.net.SocketWrapper;
 import ebolo.libma.data.data.raw.transaction.Transaction;
 import ebolo.libma.data.data.raw.transaction.TransactionWrapper;
 import ebolo.libma.stub.db.DbPortal;
+import ebolo.libma.stub.db.updates.UpdateFactory;
+import ebolo.libma.stub.net.managers.ActiveUserManager;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+
+import java.util.Collections;
 
 /**
  * StubCommand for student reserving an available book
@@ -60,11 +64,14 @@ public class ReserveCommand extends StubCommand {
                 studentDoc = DbPortal.getInstance().getUserDb().find(new Document("_id", studentObjId)).first();
             // get current time as version number
             final long currentTime = System.currentTimeMillis();
-            
-            // retrieve book from database and check if it's available
-            Document updateQuery = new Document("$inc", new Document("unit_available", -1));
-            updateQuery.put("$set", new Document("last_modified", currentTime));
+    
             if (bookDoc.getBoolean("available")) {
+                // retrieve book from database and check if it's available
+                Document updateQuery = new Document("$inc", new Document("unit_available", -1));
+                updateQuery.put("$set", new Document("last_modified", currentTime));
+                // If this is the last unit of the book then it is not available for other students
+                if (bookDoc.getInteger("unit_available") == 1)
+                    updateQuery.put("$set", new Document("available", false));
                 // if book is available then try updating book's info in database first
                 UpdateResult updateResult = bookDb.updateOne(
                     new Document("_id", bookObjId),
@@ -86,7 +93,10 @@ public class ReserveCommand extends StubCommand {
                     Document transactionDoc = transaction.toMongoDocument();
                     transactionDoc.put("last_modified", currentTime);
                     DbPortal.getInstance().getTransactionDb().insertOne(transactionDoc);
-                    // TODO: update other active clients
+                    // Update other clients
+                    ActiveUserManager.getInstance().sendMessageToAll(null, UpdateFactory.createUpdate(
+                        Collections.singletonList(bookDb.find(new Document("_id", bookObjId)).first()), "book"
+                    ));
                     
                     // Finally send out the transaction wrapper back to client
                     String studentName =
@@ -98,6 +108,10 @@ public class ReserveCommand extends StubCommand {
                         transactionDoc.getObjectId("_id").toString()
                     );
                     client.sendMessage(Message.messageGenerate("success", transactionWrapper));
+                    // and to librarians
+                    ActiveUserManager.getInstance().sendMessageToAllLibrarians(null, UpdateFactory.createUpdate(
+                        Collections.singletonList(transactionWrapper.toMongoDocument()), "transaction"
+                    ));
                     return true;
                 }
                 failedReason = "Cannot get access to internal database!";
