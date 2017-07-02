@@ -12,7 +12,6 @@ import ebolo.libma.commons.commands.proc.SingleCommandProcessor;
 import ebolo.libma.commons.net.StubCommunication;
 import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
-import ebolo.libma.commons.ui.ViewStatus;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
 import ebolo.libma.commons.ui.utils.WindowMonitor;
 import ebolo.libma.data.data.raw.book.Book;
@@ -83,18 +82,7 @@ public class ClientAppMain extends Application {
                         );
                         StubCommunication.getInstance().startBookMonitorThreads();
                         // request update from database (if there is any)
-                        new Thread(() -> {
-                            ViewStatus.getInstance().updateStatus("Loading local db...");
-                            BookListManager.getInstance().loadLocal();
-                            ViewStatus.getInstance().updateStatus("Ready.");
-                            CommandUtils.sendCommand(
-                                MetaInfo.USER_MODE.Kernel,
-                                StubCommunication.getInstance().getStub(),
-                                "request_update",
-                                BookListManager.getInstance().getCurrentVersion(),
-                                "book"
-                            );
-                        }).start();
+                        BookListManager.getInstance().syncStub();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

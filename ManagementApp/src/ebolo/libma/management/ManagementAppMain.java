@@ -2,12 +2,10 @@ package ebolo.libma.management;
 
 import ebolo.libma.assistant.Alias;
 import ebolo.libma.authenticate.UserAuthenticationUI;
-import ebolo.libma.commons.commands.CommandUtils;
 import ebolo.libma.commons.commands.proc.SingleCommandProcessor;
 import ebolo.libma.commons.net.StubCommunication;
 import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
-import ebolo.libma.commons.ui.ViewStatus;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;
 import ebolo.libma.commons.ui.utils.WindowMonitor;
 import ebolo.libma.data.data.raw.book.Book;
@@ -92,44 +90,9 @@ public class ManagementAppMain extends Application {
                 StubCommunication.getInstance().startTransactionMonitorThreads();
                 
                 // request updates from database (if there is any)
-                new Thread(() -> {
-                    ViewStatus.getInstance().updateStatus("Loading local db...");
-                    BookListManager.getInstance().loadLocal();
-                    ViewStatus.getInstance().updateStatus("Ready.");
-                    CommandUtils.sendCommand(
-                        MetaInfo.USER_MODE.Kernel,
-                        StubCommunication.getInstance().getStub(),
-                        "request_update",
-                        BookListManager.getInstance().getCurrentVersion(),
-                        "book"
-                    );
-                }).start();
-                
-                new Thread(() -> {
-                    ViewStatus.getInstance().updateStatus("Loading local db...");
-                    StudentListManager.getInstance().loadLocal();
-                    ViewStatus.getInstance().updateStatus("Ready.");
-                    CommandUtils.sendCommand(
-                        MetaInfo.USER_MODE.Kernel,
-                        StubCommunication.getInstance().getStub(),
-                        "request_update",
-                        StudentListManager.getInstance().getCurrentVersion(),
-                        "student"
-                    );
-                }).start();
-                
-                new Thread(() -> {
-                    ViewStatus.getInstance().updateStatus("Loading local db...");
-                    TransactionListManager.getInstance().loadLocal();
-                    ViewStatus.getInstance().updateStatus("Ready.");
-                    CommandUtils.sendCommand(
-                        MetaInfo.USER_MODE.Kernel,
-                        StubCommunication.getInstance().getStub(),
-                        "request_update",
-                        TransactionListManager.getInstance().getCurrentVersion(),
-                        "transaction"
-                    );
-                }).start();
+                BookListManager.getInstance().syncStub();
+                StudentListManager.getInstance().syncStub();
+                TransactionListManager.getInstance().syncStub();
     
                 new Thread(() -> Alias.getInstance().setExtendedFactory(CentralCommandFactory.getInstance())).start();
             },

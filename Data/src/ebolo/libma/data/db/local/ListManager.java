@@ -40,7 +40,7 @@ import static com.mongodb.connection.ByteBufferBsonOutput.MAX_BUFFER_SIZE;
  * @since 20/06/2017
  */
 
-public class ListManager<T extends AbstractMongolizable, S extends ObjectUIWrapper<T>> {
+public abstract class ListManager<T extends AbstractMongolizable, S extends ObjectUIWrapper<T>> {
     /**
      * current database version, is used to synchronize with the online database
      */
@@ -164,7 +164,7 @@ public class ListManager<T extends AbstractMongolizable, S extends ObjectUIWrapp
      */
     
     @SuppressWarnings("unchecked")
-    public void loadLocal() {
+    void loadLocal() {
         try {
             File dbFile = new File(databaseDirectoryPath + File.separatorChar + type + ".db");
             if (dbFile.exists()) {
@@ -186,7 +186,8 @@ public class ListManager<T extends AbstractMongolizable, S extends ObjectUIWrapp
                         .map(t -> sFactory.produce(t, t.getObjectId())).collect(Collectors.toList())
                 );
             }
-        } catch (IOException ignored) {
+        } catch (Exception e) {
+            syncStub();
         }
     }
     
@@ -237,7 +238,7 @@ public class ListManager<T extends AbstractMongolizable, S extends ObjectUIWrapp
         this.sFactory = sFactory;
     }
     
-    public long getCurrentVersion() {
+    long getCurrentVersion() {
         return currentVersion;
     }
     
@@ -256,4 +257,6 @@ public class ListManager<T extends AbstractMongolizable, S extends ObjectUIWrapp
     public String getType() {
         return type;
     }
+    
+    public abstract void syncStub();
 }
