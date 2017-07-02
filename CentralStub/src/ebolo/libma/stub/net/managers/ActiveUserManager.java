@@ -2,6 +2,7 @@ package ebolo.libma.stub.net.managers;
 
 import com.sun.istack.internal.Nullable;
 import ebolo.libma.commons.net.SocketWrapper;
+import ebolo.libma.data.data.raw.user.utils.MetaInfo;
 import org.bson.Document;
 
 import java.io.IOException;
@@ -55,6 +56,20 @@ public class ActiveUserManager {
     public void sendMessageToAll(@Nullable String userId, Document message) {
         activeUsers.forEach((s, socketWrapper) -> {
             if (userId == null || !s.equals(userId))
+                socketWrapper.sendMessage(message);
+        });
+    }
+    
+    public void sendMessageToAllStudents(@Nullable String userId, Document message) {
+        activeUsers.forEach((s, socketWrapper) -> {
+            if ((userId == null || !s.equals(userId)) && socketWrapper.getUserMode() == MetaInfo.USER_MODE.Student)
+                socketWrapper.sendMessage(message);
+        });
+    }
+    
+    public void sendMessageToAllLibrarians(@Nullable String userId, Document message) {
+        activeUsers.forEach((s, socketWrapper) -> {
+            if ((userId == null || !s.equals(userId)) && socketWrapper.getUserMode() == MetaInfo.USER_MODE.Librarian)
                 socketWrapper.sendMessage(message);
         });
     }
