@@ -55,7 +55,7 @@ public class AuthenticationCommand extends StubCommand {
             
             // check if user type is correct
             if (!translatedArgs[1].equals(userInfo.getString("user_mode"))) {
-                failedReason = "You do not have sufficient permission to continue!";
+                failedReason = "Insufficient permission!";
                 return false;
             }
             

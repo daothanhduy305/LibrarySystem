@@ -65,6 +65,9 @@ public class AuthenticationController {
                 String hashedPassword = Crypt.crypt(password, storedHashedPassword);
                 auth = storedHashedPassword.equals(hashedPassword);
                 stub.sendMessage(Message.messageGenerate("auth", hashedPassword));
+            } else {
+                infoLabel.setText(resultMessage.getString("package"));
+                return;
             }
         }
         
