@@ -125,19 +125,13 @@ public class StudentsViewController implements Controller {
             });
             MenuItem delete = new MenuItem("Delete");
             delete.setOnAction(event1 -> deleteStudents());
-            MenuItem modify = new MenuItem("Edit...");
             delete.disableProperty().bind(
-                Bindings.size(StudentListManager.getInstance().getUiList())
-                    .isEqualTo(0)
-            );
-            modify.disableProperty().bind(
                 Bindings.size(StudentListManager.getInstance().getUiList())
                     .isEqualTo(0)
             );
             
             contextMenu = new ContextMenu(
                 addNew,
-                modify,
                 delete
             );
         }

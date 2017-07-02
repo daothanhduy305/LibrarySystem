@@ -1,19 +1,15 @@
 package ebolo.libma.management.ui.controllers;
 
-import ebolo.libma.commons.ui.ScreenUtils;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
-import ebolo.libma.commons.ui.utils.ControllerWrapper;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
 import ebolo.libma.data.db.local.BookListManager;
 import ebolo.libma.management.commander.CentralCommandFactory;
-import ebolo.libma.management.ui.fxml.FxmlManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.IOException;
@@ -31,7 +27,6 @@ import java.util.concurrent.Future;
 
 public class BooksViewController implements Controller {
     private static BooksViewController ourInstance;
-    private Stage addNewBookWindow, modifyBookWindow;
     
     @FXML
     private TableView<BookUIWrapper> booksTableView;
@@ -57,26 +52,7 @@ public class BooksViewController implements Controller {
     }
     
     public void addNewBook() throws IOException {
-        if (addNewBookWindow == null) {
-            AddBookController addBookController = AddBookController.getInstance();
-            AddBookIsbnController addBookIsbnController = AddBookIsbnController.getInstance();
-            AddBookFullController addBookFullController = AddBookFullController.getInstance();
-            
-            addNewBookWindow = UIFactory.createWindow(
-                "Add new book",
-                FxmlManager.getInstance().getFxmlTemplate("AddBookFXML"),
-                AppMainController.getInstance().getWindow(),
-                ScreenUtils.getScreenWidth() * 0.6,
-                ScreenUtils.getScreenHeight() * 0.6,
-                new ControllerWrapper(addBookController.getClass(), addBookController),
-                new ControllerWrapper(addBookIsbnController.getClass(), addBookIsbnController),
-                new ControllerWrapper(addBookFullController.getClass(), addBookFullController)
-            );
-            
-            addBookController.setUpUI();
-            addNewBookWindow.setOnCloseRequest(event -> AddBookController.getInstance().cancel());
-        }
-        addNewBookWindow.show();
+        AddBookController.getInstance().show();
     }
     
     @SuppressWarnings("Duplicates")
@@ -104,21 +80,11 @@ public class BooksViewController implements Controller {
     }
     
     private void modifyBook() throws IOException {
-        BookUIWrapper modifyingBook = booksTableView
-            .getSelectionModel()
-            .getSelectedItems().get(0);
-        if (modifyBookWindow == null) {
-            ModifyBookController modifyBookController = ModifyBookController.getInstance();
-            modifyBookWindow = UIFactory.createWindow(
-                "Modifying " + modifyingBook.getTitle(),
-                FxmlManager.getInstance().getFxmlTemplate("EditBookFXML"),
-                null, 0, 0,
-                new ControllerWrapper(modifyBookController.getClass(), modifyBookController)
-            );
-            modifyBookController.setUpUI();
-        }
-        ModifyBookController.getInstance().setBookUIWrapper(modifyingBook);
-        modifyBookWindow.show();
+        ModifyBookController.getInstance().show(
+            booksTableView
+                .getSelectionModel()
+                .getSelectedItems().get(0)
+        );
     }
     
     @SuppressWarnings("Duplicates, unchecked")

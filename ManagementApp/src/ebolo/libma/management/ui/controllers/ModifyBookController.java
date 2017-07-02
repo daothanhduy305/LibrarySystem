@@ -2,17 +2,21 @@ package ebolo.libma.management.ui.controllers;
 
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
+import ebolo.libma.commons.ui.utils.ControllerWrapper;
 import ebolo.libma.commons.utils.Time;
 import ebolo.libma.data.data.raw.book.Book;
 import ebolo.libma.data.data.raw.book.utils.BookLanguage;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
 import ebolo.libma.data.data.utils.exceptions.WrongISBN;
 import ebolo.libma.management.commander.CentralCommandFactory;
+import ebolo.libma.management.ui.fxml.FxmlManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -31,6 +35,7 @@ import java.util.concurrent.Future;
 public class ModifyBookController implements Controller {
     private static ModifyBookController ourInstance;
     private BookUIWrapper bookUIWrapper;
+    private Stage modifyBookWindow;
     
     @FXML
     private DatePicker datePicker;
@@ -253,5 +258,20 @@ public class ModifyBookController implements Controller {
         descriptionTextArea.clear();
         datePicker.getEditor().clear();
         getWindow().hide();
+    }
+    
+    void show(BookUIWrapper bookUIWrapper) throws IOException {
+        if (modifyBookWindow == null) {
+            ModifyBookController modifyBookController = ModifyBookController.getInstance();
+            modifyBookWindow = UIFactory.createWindow(
+                "Modifying " + bookUIWrapper.getTitle(),
+                FxmlManager.getInstance().getFxmlTemplate("EditBookFXML"),
+                null, 0, 0,
+                new ControllerWrapper(modifyBookController.getClass(), modifyBookController)
+            );
+            modifyBookController.setUpUI();
+        }
+        ModifyBookController.getInstance().setBookUIWrapper(bookUIWrapper);
+        modifyBookWindow.show();
     }
 }
