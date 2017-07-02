@@ -109,8 +109,10 @@ public class ReserveCommand extends StubCommand {
                     );
                     client.sendMessage(Message.messageGenerate("success", transactionWrapper));
                     // and to librarians
+                    Document transactionWrapperDoc = transactionWrapper.toMongoDocument();
+                    transactionWrapperDoc.put("last_modified", currentTime);
                     ActiveUserManager.getInstance().sendMessageToAllLibrarians(null, UpdateFactory.createUpdate(
-                        Collections.singletonList(transactionWrapper.toMongoDocument()), "transaction"
+                        Collections.singletonList(transactionWrapperDoc), "transaction"
                     ));
                     return true;
                 }
