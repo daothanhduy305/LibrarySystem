@@ -1,6 +1,6 @@
 package ebolo.libma.client.ui.controllers;
 
-import ebolo.libma.authenticate.ui.fxml.FxmlManager;
+import ebolo.libma.client.ui.fxml.FxmlManager;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.commons.ui.utils.ControllerWrapper;

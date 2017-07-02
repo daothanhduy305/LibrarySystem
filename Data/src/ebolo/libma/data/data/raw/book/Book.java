@@ -114,7 +114,8 @@ public class Book extends AbstractMongolizable {
             
             // setup connection to Google book to make a GET request
             HttpURLConnection connection = (HttpURLConnection) new URL(
-                "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn + KeyConfigs.getGoogleBookApiKey()
+                "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn
+                    + "&key=" + KeyConfigs.getGoogleBookApiKey()
             ).openConnection();
             
             // add request header
@@ -177,6 +178,10 @@ public class Book extends AbstractMongolizable {
     }
     
     public String getTitle() {
+        return infoDocument.getString("title");
+    }
+    
+    public String getFullTitle() {
         return infoDocument.getString("title") +
             (infoDocument.getString("subtitle") == null ? "" : " - " + infoDocument.getString("subtitle"));
     }

@@ -16,15 +16,16 @@ import javafx.beans.property.*;
  */
 
 public class BookUIWrapper extends ObjectUIWrapper<Book> {
-    private StringProperty title, isbn10, isbn13, author, publisher, publishedDate, description, categories, language;
+    private StringProperty title, isbn10, isbn13, author, publisher, publishedDate, description, categories,
+        language, periodStr, availabilityStr;
     private IntegerProperty unitTotal, unitAvailable, pages;
     private LongProperty period;
     private BooleanProperty availability;
     
     public BookUIWrapper(Book book, String objectId) {
         super(book, objectId);
-        
-        title = new SimpleStringProperty(book.getTitle());
+    
+        title = new SimpleStringProperty(book.getFullTitle());
         isbn10 = new SimpleStringProperty(book.getIsbn(10));
         isbn13 = new SimpleStringProperty(book.getIsbn(13));
         author = new SimpleStringProperty(book.getAuthors());
@@ -37,10 +38,26 @@ public class BookUIWrapper extends ObjectUIWrapper<Book> {
         unitTotal = new SimpleIntegerProperty(book.getUnitTotal());
         unitAvailable = new SimpleIntegerProperty(book.getUnitAvailable());
         pages = new SimpleIntegerProperty(book.getPages());
-        
-        period = new SimpleLongProperty(book.getPeriod());
-        
-        availability = new SimpleBooleanProperty(book.isAvailable());
+    
+        period = new SimpleLongProperty(0);
+        periodStr = new SimpleStringProperty("");
+        period.addListener((observable, oldValue, newValue) -> {
+            String periodSt;
+            long periodInt = period.get();
+            if (periodInt % 2629743 == 0)
+                periodSt = (periodInt / 2629743) + " month(s)";
+            else if (periodInt % 604800 == 0)
+                periodSt = (periodInt / 604800) + " week(s)";
+            else
+                periodSt = (periodInt / 86400) + " day(s)";
+            periodStr.set(periodSt);
+        });
+        period.set(book.getPeriod());
+    
+        availabilityStr = new SimpleStringProperty("");
+        availability = new SimpleBooleanProperty(!book.isAvailable());
+        availability.addListener((observable, oldValue, newValue) -> availabilityStr.set(newValue ? "Yes" : "No"));
+        availability.set(book.isAvailable());
     }
     
     public String getTitle() {
@@ -131,9 +148,29 @@ public class BookUIWrapper extends ObjectUIWrapper<Book> {
         return availability.get();
     }
     
+    public StringProperty periodStrProperty() {
+        return periodStr;
+    }
+    
+    public IntegerProperty pagesProperty() {
+        return pages;
+    }
+    
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+    
+    public BooleanProperty availabilityProperty() {
+        return availability;
+    }
+    
+    public StringProperty availabilityStrProperty() {
+        return availabilityStr;
+    }
+    
     @Override
     public void update(Book book) {
-        title.set(book.getTitle());
+        title.set(book.getFullTitle());
         isbn10.set(book.getIsbn(10));
         isbn13.set(book.getIsbn(13));
         author.set(book.getAuthors());

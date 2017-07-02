@@ -88,7 +88,7 @@ public class AdderController implements Controller {
                     // Push every legal book into database
                     bookList.forEach(book -> {
                         DbPortal.getInstance().getBookDb().insertOne(book.toMongoDocument());
-                        updateMessage("Added book: " + book.getTitle());
+                        updateMessage("Added book: " + book.getFullTitle());
                     });
                     updateMessage("Finished adding " + bookList.size() + " book(s).");
                     return isbnStrings.size();

@@ -4,6 +4,9 @@ import ebolo.libma.client.commander.StudentCommandFactory;
 import ebolo.libma.commons.ui.UIFactory;
 import ebolo.libma.commons.ui.utils.Controller;
 import ebolo.libma.data.data.ui.book.BookUIWrapper;
+import ebolo.libma.data.db.local.BookListManager;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -51,38 +54,45 @@ public class BookInfoController implements Controller {
      */
     void setBookUIWrapper(BookUIWrapper bookUIWrapper) {
         this.bookUIWrapper = bookUIWrapper;
-        
-        titleTextField.setText(bookUIWrapper.getTitle());
-        authorsTextField.setText(bookUIWrapper.getAuthor());
-        categoriesTextField.setText(bookUIWrapper.getCategories());
-        String periodStr;
-        if (bookUIWrapper.getPeriod() % 2629743 == 0)
-            periodStr = (bookUIWrapper.getPeriod() / 2629743) + " month(s)";
-        else if (bookUIWrapper.getPeriod() % 604800 == 0)
-            periodStr = (bookUIWrapper.getPeriod() / 604800) + " week(s)";
-        else
-            periodStr = (bookUIWrapper.getPeriod() / 86400) + " day(s)";
-        periodTextField.setText(periodStr);
-        publisherTextField.setText(bookUIWrapper.getPublisher());
-        pagesTextField.setText("" + bookUIWrapper.getPages());
-        descriptionTextArea.setText(bookUIWrapper.getDescription());
-        availabilityLabel.setText(bookUIWrapper.isAvailability() ? "yes" : "no");
+    
+        titleTextField.textProperty().bind(bookUIWrapper.titleProperty());
+        authorsTextField.textProperty().bind(bookUIWrapper.authorProperty());
+        categoriesTextField.textProperty().bind(bookUIWrapper.categoriesProperty());
+        periodTextField.textProperty().bind(bookUIWrapper.periodStrProperty());
+        publisherTextField.textProperty().bind(bookUIWrapper.publisherProperty());
+        pagesTextField.textProperty().bind(Bindings.convert(bookUIWrapper.pagesProperty()));
+        descriptionTextArea.textProperty().bind(bookUIWrapper.descriptionProperty());
+        availabilityLabel.textProperty().bind(bookUIWrapper.availabilityStrProperty());
         availabilityLabel.setTextFill(bookUIWrapper.isAvailability() ? Color.GREEN : Color.RED);
-        dateTextField.setText(bookUIWrapper.getPublishedDate());
-        languageTextField.setText(bookUIWrapper.getLanguage());
+        availabilityLabel.textProperty().addListener((observable, oldValue, newValue) ->
+            availabilityLabel.setTextFill(bookUIWrapper.isAvailability() ? Color.GREEN : Color.RED));
+        dateTextField.textProperty().bind(bookUIWrapper.publishedDateProperty());
+        languageTextField.textProperty().bind(bookUIWrapper.languageProperty());
     }
     
     @FXML
     private void reserve() {
         final String bookObjId = bookUIWrapper.getObjectId();
         new Thread(() -> {
-            Future<String> result = StudentCommandFactory.getInstance().run("reserve", new String[]{bookObjId});
+            Future<String> result = StudentCommandFactory.getInstance().run(
+                "student.reserve_book", bookObjId);
             String resultMessage = "";
             try {
                 resultMessage = result.get();
-                if (resultMessage.equals("success"))
+                if (resultMessage.equals("success")) {
+                    Platform.runLater(() -> {
+                        try {
+                            setBookUIWrapper(
+                                BookListManager.getInstance().getUiList()
+                                    .filtered(bookUIWrapper1 -> bookUIWrapper1.getObjectId().equals(bookObjId))
+                                    .get(0)
+                            );
+                        } catch (Exception ignored) {
+                        }
+                    });
                     UIFactory.showAnnouncement(Alert.AlertType.INFORMATION, "Success",
                         "You have successfully reserve book \"" + bookUIWrapper.getTitle() + "\".");
+                }
             } catch (InterruptedException | ExecutionException e) {
                 UIFactory.showAnnouncement(Alert.AlertType.ERROR, "Unsuccessful",
                     resultMessage);

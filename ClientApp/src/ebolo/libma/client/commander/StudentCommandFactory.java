@@ -39,7 +39,7 @@ public class StudentCommandFactory implements ClientCommandFactory {
     }
     
     @Override
-    public Future<String> run(String command, Object[] args) {
+    public Future<String> run(String command, Object... args) {
         return SingleCommandProcessor.getInstance().submitCommand(getCommand(command, args));
     }
 }
