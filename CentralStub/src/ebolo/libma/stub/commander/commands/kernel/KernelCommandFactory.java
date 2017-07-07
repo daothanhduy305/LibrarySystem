@@ -26,7 +26,7 @@ public class KernelCommandFactory implements StubCommandFactory {
     }
     
     @Override
-    public StubCommand getCommand(SocketWrapper client, String command, Object[] args) {
+    public StubCommand getCommand(SocketWrapper client, String command, Object... args) {
         switch (command) {
             case "auth":
                 return new AuthenticationCommand(client, args);

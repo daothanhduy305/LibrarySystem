@@ -51,24 +51,26 @@ public class ModifyBookCommand extends StubCommand {
     
     @Override
     protected boolean legalAction() throws Exception {
-        // convert modified book into Bson document
-        Document bookDoc = modifiedBook.toMongoDocument();
-        bookDoc.put("last_modified", System.currentTimeMillis()); // update version
-        // push into database
-        UpdateResult updateResult = DbPortal.getInstance().getBookDb().replaceOne(
-            new Document("_id", new ObjectId(bookObjId)),
-            bookDoc
-        );
-        if (updateResult.getModifiedCount() > 0) {
-            // if success then send a success message to client and notify the others
-            client.sendMessage(Message.messageGenerate("success", ""));
-            bookDoc.put("_id", new ObjectId(bookObjId));
-            ActiveUserManager.getInstance().sendMessageToAll(client.getClientId(), UpdateFactory.createUpdate(
-                Collections.singletonList(bookDoc), "book"
-            ));
-            return true;
+        synchronized (DbPortal.getInstance()) {
+            // convert modified book into Bson document
+            Document bookDoc = modifiedBook.toMongoDocument();
+            bookDoc.put("last_modified", System.currentTimeMillis()); // update version
+            // push into database
+            UpdateResult updateResult = DbPortal.getInstance().getBookDb().replaceOne(
+                new Document("_id", new ObjectId(bookObjId)),
+                bookDoc
+            );
+            if (updateResult.getModifiedCount() > 0) {
+                // if success then send a success message to client and notify the others
+                client.sendMessage(Message.messageGenerate("success", ""));
+                bookDoc.put("_id", new ObjectId(bookObjId));
+                ActiveUserManager.getInstance().sendMessageToAll(client.getClientId(), UpdateFactory.createUpdate(
+                    Collections.singletonList(bookDoc), "book"
+                ));
+                return true;
+            }
+            failedReason = "Cannot modify record in database!";
+            return false;
         }
-        failedReason = "Cannot modify record in database!";
-        return false;
     }
 }

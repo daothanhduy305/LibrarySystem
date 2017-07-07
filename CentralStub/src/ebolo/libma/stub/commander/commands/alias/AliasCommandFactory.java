@@ -26,7 +26,7 @@ public class AliasCommandFactory implements StubCommandFactory {
     }
     
     @Override
-    public StubCommand getCommand(SocketWrapper client, String command, Object[] args) {
+    public StubCommand getCommand(SocketWrapper client, String command, Object... args) {
         switch (command) {
             case "search":
                 return new SearchBookCommand(client, args);
