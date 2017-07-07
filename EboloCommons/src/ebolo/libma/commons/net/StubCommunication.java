@@ -26,7 +26,7 @@ public class StubCommunication {
     /**
      * separated threads monitoring relevant channel
      */
-    private Thread bookUpdateMonitorThread, studentUpdateMonitorThread, transactionUpdateMonitorThread;
+    private Thread bookUpdateMonitorThread, studentUpdateMonitorThread, transactionUpdateMonitorThread, deleteMonitorThread;
     
     private StubCommunication() {
         stub = new Stub(GenericNetConfigs.getStubAddress(), GenericNetConfigs.getStubPort());
@@ -53,6 +53,8 @@ public class StubCommunication {
             studentUpdateMonitorThread.interrupt();
         if (transactionUpdateMonitorThread != null)
             transactionUpdateMonitorThread.interrupt();
+        if (deleteMonitorThread != null)
+            deleteMonitorThread.interrupt();
         stub.stopStubCommunication();
     }
     
@@ -71,6 +73,32 @@ public class StubCommunication {
             TransactionListManager.getInstance(), stub.getTransactionUpdateBuffer())
         );
         transactionUpdateMonitorThread.start();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void startDeleteMonitorThread() {
+        deleteMonitorThread = new Thread(() -> {
+            while (!Thread.interrupted()) {
+                try {
+                    Document deletePackage = stub.getDeleteBuffer().take();
+                    ListManager listManager = null;
+                    switch (deletePackage.getString("type")) {
+                        case "book":
+                            listManager = BookListManager.getInstance();
+                        case "student":
+                            listManager = StudentListManager.getInstance();
+                        case "transaction":
+                            listManager = TransactionListManager.getInstance();
+                    }
+                    if (listManager != null) {
+                        listManager.deleteByObjectIds((List<String>) deletePackage.get("package"));
+                    }
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        deleteMonitorThread.start();
     }
     
     /**

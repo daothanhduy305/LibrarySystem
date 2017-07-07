@@ -78,6 +78,7 @@ public class ClientAppMain extends Application {
                             "Book", AppConfigurations.getWorkingDir(), Book::new, BookUIWrapper::new
                         );
                         StubCommunication.getInstance().startBookMonitorThreads();
+                        StubCommunication.getInstance().startDeleteMonitorThread();
                         // request update from database (if there is any)
                         BookListManager.getInstance().syncStub();
                     } catch (InterruptedException e) {

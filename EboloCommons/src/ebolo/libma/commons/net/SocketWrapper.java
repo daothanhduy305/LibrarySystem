@@ -28,7 +28,8 @@ public class SocketWrapper {
     /**
      * queues that act as separated channels, demonstrating multiplex/de-multiplex mechanism
      */
-    private BlockingQueue<Document> messageBuffer, bookUpdateBuffer, studentUpdateBuffer, transactionUpdateBuffer;
+    private BlockingQueue<Document> messageBuffer, bookUpdateBuffer, studentUpdateBuffer,
+        transactionUpdateBuffer, deleteBuffer;
     /**
      * only used for users
      */
@@ -47,6 +48,7 @@ public class SocketWrapper {
         bookUpdateBuffer = new ArrayBlockingQueue<>(100);
         studentUpdateBuffer = new ArrayBlockingQueue<>(100);
         transactionUpdateBuffer = new ArrayBlockingQueue<>(100);
+        deleteBuffer = new ArrayBlockingQueue<>(100);
     }
     
     /**
@@ -99,6 +101,10 @@ public class SocketWrapper {
     
     BlockingQueue<Document> getTransactionUpdateBuffer() {
         return transactionUpdateBuffer;
+    }
+    
+    BlockingQueue<Document> getDeleteBuffer() {
+        return deleteBuffer;
     }
     
     public String getClientId() {

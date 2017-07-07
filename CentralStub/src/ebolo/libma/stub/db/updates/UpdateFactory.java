@@ -14,4 +14,10 @@ public class UpdateFactory {
         response.put("type", type);
         return response;
     }
+    
+    public static Document createDeleteUpdate(List<String> updates, String type) {
+        Document response = Message.messageGenerate("delete", updates);
+        response.put("type", type);
+        return response;
+    }
 }

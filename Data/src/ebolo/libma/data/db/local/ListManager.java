@@ -101,6 +101,14 @@ public abstract class ListManager<T extends AbstractMongolizable, S extends Obje
         saveLocal();
     }
     
+    public void deleteByObjectIds(List<String> objectIds) {
+        System.out.println(uiList.size());
+        uiList.forEach(s -> System.out.println(s.getObjectId().equals(objectIds.get(0))));
+        List<S> test = uiList.filtered(s -> objectIds.contains(s.getObjectId()));
+        System.out.println(test.size());
+        delete(test);
+    }
+    
     /**
      * This function would help synchronize with the online (internal) database. Steps are described thoughtfully
      * inside the method itself

@@ -48,18 +48,25 @@ public class Stub {
                         try {
                             Document received = stubSocket != null ? stubSocket.getMessage() : null;
                             if ((received != null ? received.get("message") : null) != null) {
-                                
                                 // Categorize messages based on message type and put it into the correct channel
-                                if (received.get("message").equals("update")) {
-                                    Logger.getLogger("myApp").log(Level.INFO, "New update arrives");
-                                    if (received.getString("type").equals("book"))
-                                        stubSocket.getBookUpdateBuffer().put(received);
-                                    else if (received.getString("type").equals("student"))
-                                        stubSocket.getStudentUpdateBuffer().put(received);
-                                    else
-                                        stubSocket.getTransactionUpdateBuffer().put(received);
-                                } else
-                                    stubSocket.getMessageBuffer().put(received);
+                                switch (received.getString("message")) {
+                                    case "update":
+                                        Logger.getLogger("myApp").log(Level.INFO, "New update arrives");
+                                        if (received.getString("type").equals("book"))
+                                            stubSocket.getBookUpdateBuffer().put(received);
+                                        else if (received.getString("type").equals("student"))
+                                            stubSocket.getStudentUpdateBuffer().put(received);
+                                        else
+                                            stubSocket.getTransactionUpdateBuffer().put(received);
+                                        break;
+                                    case "delete":
+                                        stubSocket.getDeleteBuffer().put(received);
+                                        break;
+                                    default:
+                                        stubSocket.getMessageBuffer().put(received);
+                                        break;
+        
+                                }
                             }
                         } catch (IOException | NullPointerException | InterruptedException e) {
                             break; // TODO: examine InterruptedException (for message buffer impact)
@@ -100,6 +107,10 @@ public class Stub {
     
     BlockingQueue<Document> getTransactionUpdateBuffer() {
         return stubSocket.getTransactionUpdateBuffer();
+    }
+    
+    BlockingQueue<Document> getDeleteBuffer() {
+        return stubSocket.getDeleteBuffer();
     }
     
     synchronized public boolean isConnected() {

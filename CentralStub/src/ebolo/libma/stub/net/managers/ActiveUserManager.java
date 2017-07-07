@@ -99,4 +99,8 @@ public class ActiveUserManager {
         Logger.getLogger("myApp").log(Level.INFO, "A user has just left");
         Logger.getLogger("myApp").log(Level.INFO, "Active user: " + activeUsers.size());
     }
+    
+    public Map<String, SocketWrapper> getActiveUsers() {
+        return activeUsers;
+    }
 }
