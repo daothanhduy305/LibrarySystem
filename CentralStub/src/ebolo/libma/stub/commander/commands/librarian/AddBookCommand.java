@@ -7,10 +7,19 @@ import ebolo.libma.data.data.raw.book.Book;
 import ebolo.libma.stub.db.DbPortal;
 import ebolo.libma.stub.db.updates.UpdateFactory;
 import ebolo.libma.stub.net.managers.ActiveUserManager;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.nio.entity.NStringEntity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 
+import java.io.IOException;
 import java.util.Collections;
+
+import static ebolo.libma.commons.ui.utils.GenericUtils.util;
 
 /**
  * StubCommand for librarian add new book
@@ -62,6 +71,38 @@ public class AddBookCommand extends StubCommand {
                 ActiveUserManager.getInstance().sendMessageToAll(client.getClientId(), UpdateFactory.createUpdate(
                     Collections.singletonList(bookDocument), "book"
                 ));
+    
+                // Update Elastic Search
+                new Thread(() -> {
+                    RestClient restClient = RestClient.builder(
+                        new HttpHost("localhost", 9200, "http"),
+                        new HttpHost("localhost", 9201, "http")).build();
+                    book = new Book(bookDocument);
+                    String content = (util(book.getFullTitle()) +
+                        util(book.getAuthors().replace(",", "")) +
+                        util(book.getCategories().replace(",", "")) +
+                        util(book.getDescription()) +
+                        util(book.getPublisher()) +
+                        util(book.getPublishedDate()) +
+                        util(book.getIsbn(10)) +
+                        book.getIsbn(13)).replace("\"", "");
+                    //index a document
+                    HttpEntity entities = new NStringEntity(
+                        "{\n" +
+                            "    \"available\" : \"" + book.isAvailable() + "\",\n" +
+                            "    \"content\" : \"" + content + "\"\n" +
+                            "}", ContentType.APPLICATION_JSON);
+        
+                    try {
+                        Response indexResponse = restClient.performRequest(
+                            "PUT",
+                            "/libmantest/books/" + book.getObjectId(),
+                            Collections.emptyMap(),
+                            entities);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
                 return true;
             } else
                 failedReason = "Something went wrong. Cannot insert new book into database!";
