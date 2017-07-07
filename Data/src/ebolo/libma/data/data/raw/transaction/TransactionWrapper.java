@@ -63,7 +63,8 @@ public class TransactionWrapper extends AbstractMongolizable {
         this.expireTime = document.getLong("expired_time");
         this.expired = document.getBoolean("expired");
         this.returned = document.getBoolean("returned");
-        this.objectId = document.getObjectId("_id").toString();
+        if (document.getObjectId("_id") != null)
+            this.objectId = document.getObjectId("_id").toString();
     }
     
     public String getStudent() {

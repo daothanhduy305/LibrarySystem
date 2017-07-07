@@ -38,6 +38,8 @@ public abstract class User extends AbstractMongolizable {
     }
     
     User(Document document) {
+        if (document.getObjectId("_id") != null)
+            this.objectId = document.getObjectId("_id").toString();
         this.authenticationInfo = new AuthenticationInfo((Document) document.get("auth"));
         this.firstName = document.getString("first_name");
         this.middleName = document.getString("middle_name");
