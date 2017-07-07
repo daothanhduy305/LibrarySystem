@@ -55,9 +55,10 @@ public class ReserveCommand extends StubCommand {
     
     @Override
     protected boolean legalAction() throws Exception {
-        synchronized (DbPortal.getInstance().getBookDb()) { // one book at a time
+        synchronized (DbPortal.getInstance()) { // one book at a time
             // prepare book/student info
             final MongoCollection<Document> bookDb = DbPortal.getInstance().getBookDb();
+            final MongoCollection<Document> studentDb = DbPortal.getInstance().getUserDb();
             final ObjectId bookObjId = new ObjectId(transaction.getBookObjId()),
                 studentObjId = new ObjectId(transaction.getStudentObjId());
             final Document bookDoc = bookDb.find(new Document("_id", bookObjId)).first(),
@@ -73,7 +74,8 @@ public class ReserveCommand extends StubCommand {
                 if (bookDoc.getInteger("unit_available") == 1)
                     updateQuery.put("$set", new Document("available", false));
                 // if book is available then try updating book's info in database first
-                UpdateResult updateResult = bookDb.updateOne(
+                UpdateResult updateResult;
+                updateResult = bookDb.updateOne(
                     new Document("_id", bookObjId),
                     updateQuery
                 );
@@ -81,45 +83,46 @@ public class ReserveCommand extends StubCommand {
                     // If everything is ok then modify student's info
                     updateQuery = new Document("$inc", new Document("borrowing", 1));
                     updateQuery.put("$set", new Document("last_modified", currentTime));
-                    DbPortal.getInstance().getUserDb().updateOne(
+                    updateResult = DbPortal.getInstance().getUserDb().updateOne(
                         new Document("_id", studentObjId),
                         updateQuery
                     );
-                    
-                    // Then push the transaction into database
-                    long startTime = System.currentTimeMillis();
-                    transaction.setStartTime(startTime);
-                    transaction.setExpireTime(startTime + bookDoc.getLong("period"));
-                    Document transactionDoc = transaction.toMongoDocument();
-                    transactionDoc.put("last_modified", currentTime);
-                    DbPortal.getInstance().getTransactionDb().insertOne(transactionDoc);
-                    // Update other clients
-                    // First we need to update book's info to all clients
-                    ActiveUserManager.getInstance().sendMessageToAll(null, UpdateFactory.createUpdate(
-                        Collections.singletonList(bookDb.find(new Document("_id", bookObjId)).first()), "book"
-                    ));
-                    // And then update student's info to librarians
-                    ActiveUserManager.getInstance().sendMessageToAllLibrarians(null, UpdateFactory.createUpdate(
-                        Collections.singletonList(bookDb.find(new Document("_id", studentObjId)).first()), "student"
-                    ));
-                    
-                    // Finally send out the transaction wrapper back to client
-                    String studentName =
-                        studentDoc.getString("first_name") + ", " + studentDoc.getString("last_name");
-                    TransactionWrapper transactionWrapper = new TransactionWrapper(
-                        studentName, ((Document) bookDoc.get("info_doc")).getString("title"),
-                        transaction.getStartTime(), transaction.getExpireTime(),
-                        transaction.isReturned(), transaction.isExpired(),
-                        transactionDoc.getObjectId("_id").toString()
-                    );
-                    client.sendMessage(Message.messageGenerate("success", transactionWrapper));
-                    // and to librarians
-                    Document transactionWrapperDoc = transactionWrapper.toMongoDocument();
-                    transactionWrapperDoc.put("last_modified", currentTime);
-                    ActiveUserManager.getInstance().sendMessageToAllLibrarians(null, UpdateFactory.createUpdate(
-                        Collections.singletonList(transactionWrapperDoc), "transaction"
-                    ));
-                    return true;
+                    if (updateResult.getModifiedCount() > 0) {
+                        // Then push the transaction into database
+                        long startTime = System.currentTimeMillis();
+                        transaction.setStartTime(startTime);
+                        transaction.setExpireTime(startTime + bookDoc.getLong("period") * 1000);
+                        Document transactionDoc = transaction.toMongoDocument();
+                        transactionDoc.put("last_modified", currentTime);
+                        DbPortal.getInstance().getTransactionDb().insertOne(transactionDoc);
+                        // Update other clients
+                        // First we need to update book's info to all clients
+                        ActiveUserManager.getInstance().sendMessageToAll(null, UpdateFactory.createUpdate(
+                            Collections.singletonList(bookDb.find(new Document("_id", bookObjId)).first()), "book"
+                        ));
+                        // And then update student's info to librarians
+                        ActiveUserManager.getInstance().sendMessageToAllLibrarians(null, UpdateFactory.createUpdate(
+                            Collections.singletonList(studentDb.find(new Document("_id", studentObjId)).first()), "student"
+                        ));
+        
+                        // Finally send out the transaction wrapper back to client
+                        String studentName =
+                            studentDoc.getString("first_name") + ", " + studentDoc.getString("last_name");
+                        TransactionWrapper transactionWrapper = new TransactionWrapper(
+                            studentName, ((Document) bookDoc.get("info_doc")).getString("title"),
+                            transaction.getStartTime(), transaction.getExpireTime(),
+                            transaction.isReturned(), transaction.isExpired(),
+                            transactionDoc.getObjectId("_id").toString()
+                        );
+                        client.sendMessage(Message.messageGenerate("success", transactionWrapper));
+                        // and to librarians
+                        Document transactionWrapperDoc = transactionWrapper.toMongoDocument();
+                        transactionWrapperDoc.put("last_modified", currentTime);
+                        ActiveUserManager.getInstance().sendMessageToAllLibrarians(null, UpdateFactory.createUpdate(
+                            Collections.singletonList(transactionWrapperDoc), "transaction"
+                        ));
+                        return true;
+                    }
                 }
                 failedReason = "Cannot get access to internal database!";
                 return false;

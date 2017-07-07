@@ -6,6 +6,7 @@ import ebolo.libma.commons.commands.factory.CommandFactory;
 import ebolo.libma.commons.commands.proc.SingleCommandProcessor;
 import ebolo.libma.management.commander.book.BookCommandFactory;
 import ebolo.libma.management.commander.student.StudentCommandFactory;
+import ebolo.libma.management.commander.transaction.TransactionCommandFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class CentralCommandFactory implements ClientCommandFactory {
         commandFactoryMap = new HashMap<>(2);
         commandFactoryMap.put("book", BookCommandFactory.getInstance());
         commandFactoryMap.put("student", StudentCommandFactory.getInstance());
+        commandFactoryMap.put("transaction", TransactionCommandFactory.getInstance());
     }
     
     public static CentralCommandFactory getInstance() {

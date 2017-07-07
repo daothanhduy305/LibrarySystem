@@ -86,6 +86,7 @@ public class ManagementAppMain extends Application {
                 StubCommunication.getInstance().startBookMonitorThreads();
                 StubCommunication.getInstance().startStudentMonitorThreads();
                 StubCommunication.getInstance().startTransactionMonitorThreads();
+                StubCommunication.getInstance().startDeleteMonitorThread();
                 
                 // request updates from database (if there is any)
                 BookListManager.getInstance().syncStub();

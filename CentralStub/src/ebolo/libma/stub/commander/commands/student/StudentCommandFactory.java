@@ -27,7 +27,7 @@ public class StudentCommandFactory implements StubCommandFactory {
     }
     
     @Override
-    public StubCommand getCommand(@Nullable SocketWrapper client, String command, Object[] args) {
+    public StubCommand getCommand(@Nullable SocketWrapper client, String command, Object... args) {
         switch (command) {
             case "reserve_book":
                 return new ReserveCommand(client, args);

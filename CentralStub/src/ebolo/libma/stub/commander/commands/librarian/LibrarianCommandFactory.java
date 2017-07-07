@@ -26,7 +26,7 @@ public class LibrarianCommandFactory implements StubCommandFactory {
     }
     
     @Override
-    public StubCommand getCommand(SocketWrapper client, String command, Object[] args) {
+    public StubCommand getCommand(SocketWrapper client, String command, Object... args) {
         switch (command) {
             case "add_book":
                 return new AddBookCommand(client, args);
@@ -38,6 +38,8 @@ public class LibrarianCommandFactory implements StubCommandFactory {
                 return new RemoveStudentsCommand(client, args);
             case "modify_book":
                 return new ModifyBookCommand(client, args);
+            case "finish_transactions":
+                return new FinishTransactionCommand(client, args);
         }
         return null;
     }
