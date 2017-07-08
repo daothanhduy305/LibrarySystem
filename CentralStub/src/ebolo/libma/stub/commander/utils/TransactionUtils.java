@@ -21,17 +21,21 @@ public class TransactionUtils {
      * @return the transactionDocument from the result TransactionWrapper
      */
     public static Document toTransactionWrapperDocument(Document transactionDocument) {
-        // Retrieve student info
-        Document studentDoc = DbPortal.getInstance().getUserDb()
-            .find(new Document("_id", new ObjectId(transactionDocument.getString("student")))).first();
-        String student = studentDoc.getString("first_name") + ' ' + studentDoc.getString("last_name");
-        // Retrieve book info
-        Document bookDoc = DbPortal.getInstance().getBookDb()
-            .find(new Document("_id", new ObjectId(transactionDocument.getString("book")))).first();
-        String book = ((Document) bookDoc.get("info_doc")).getString("title");
-        // Create transaction wrapper
-        transactionDocument.put("student", student);
-        transactionDocument.put("book", book);
-        return transactionDocument;
+        try {
+            // Retrieve student info
+            Document studentDoc = DbPortal.getInstance().getUserDb()
+                .find(new Document("_id", new ObjectId(transactionDocument.getString("student")))).first();
+            String student = studentDoc.getString("first_name") + ' ' + studentDoc.getString("last_name");
+            // Retrieve book info
+            Document bookDoc = DbPortal.getInstance().getBookDb()
+                .find(new Document("_id", new ObjectId(transactionDocument.getString("book")))).first();
+            String book = ((Document) bookDoc.get("info_doc")).getString("title");
+            // Create transaction wrapper
+            transactionDocument.put("student", student);
+            transactionDocument.put("book", book);
+            return transactionDocument;
+        } catch (Exception e) {
+            return new Document();
+        }
     }
 }
