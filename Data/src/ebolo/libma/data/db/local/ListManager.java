@@ -102,10 +102,7 @@ public abstract class ListManager<T extends AbstractMongolizable, S extends Obje
     }
     
     public void deleteByObjectIds(List<String> objectIds) {
-        System.out.println(uiList.size());
-        uiList.forEach(s -> System.out.println(s.getObjectId().equals(objectIds.get(0))));
         List<S> test = uiList.filtered(s -> objectIds.contains(s.getObjectId()));
-        System.out.println(test.size());
         delete(test);
     }
     
@@ -113,14 +110,17 @@ public abstract class ListManager<T extends AbstractMongolizable, S extends Obje
      * This function would help synchronize with the online (internal) database. Steps are described thoughtfully
      * inside the method itself
      *
-     * @param updateList the list of prepared Bson document retrieved from the central stub
+     * @param retrievedUpdateList the list of prepared Bson document retrieved from the central stub
      * @author Ebolo
      */
-    
-    public void sync(List<Document> updateList) {
-        
+
+    public void sync(List<Document> retrievedUpdateList) {
+        // Pre-processing: trim down the list to eliminate obsoleted entries
+        final List<Document> updateList = retrievedUpdateList
+            .parallelStream()
+            .filter(document -> document.getObjectId("_id") != null)
+            .collect(Collectors.toList());
         Logger.getLogger("myApp").log(Level.INFO, type + " updates: " + updateList.size());
-        
         // Step 1: make objects from the Bson documents and update directly to the mainList
         updateList.parallelStream()
             .forEach(document -> mainList.put(

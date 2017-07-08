@@ -85,8 +85,10 @@ public class StubCommunication {
                     switch (deletePackage.getString("type")) {
                         case "book":
                             listManager = BookListManager.getInstance();
+                            break;
                         case "student":
                             listManager = StudentListManager.getInstance();
+                            break;
                         case "transaction":
                             listManager = TransactionListManager.getInstance();
                     }
